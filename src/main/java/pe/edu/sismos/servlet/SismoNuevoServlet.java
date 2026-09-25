@@ -10,24 +10,19 @@ import pe.edu.sismos.model.Sismo;
 import pe.edu.sismos.repository.SismoRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Set;
 
 // US-01: Registrar un nuevo sismo.
-// US-02: ningún campo puede quedar vacío.
-// US-31: el código no puede repetirse.
-// US-41 (Ticket 9): magnitud, profundidad y estado dentro de los valores permitidos;
-// se agrega en este ticket. Con esto quedan cubiertas las 4 historias/tareas de
-// "Registrar un nuevo sismo". El redirect apunta al listado hasta que el detalle
-// (US-12, Ticket 10) exista; ese ticket lo actualiza para apuntar al detalle.
 @WebServlet(name = "SismoNuevoServlet", urlPatterns = "/sismos/nuevo")
 public class SismoNuevoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // Usado también por SismoEditarServlet (Ticket 11): valores de estado permitidos.
+    // Usado también por SismoEditarServlet (US-41): valores de estado permitidos.
     static final Set<String> ESTADOS_VALIDOS =
             Set.of("Registrado", "En evaluación", "En seguimiento", "Cerrado");
 
@@ -108,7 +103,9 @@ public class SismoNuevoServlet extends HttpServlet {
             repositorio.agregar(sismo);
 
             // Redirect inicia una nueva petición GET y evita repetir el POST al recargar.
-            response.sendRedirect(request.getContextPath() + "/sismos");
+            response.sendRedirect(request.getContextPath()
+                    + "/sismos/detalle?codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8)
+                    + "&creado=1");
         } catch (NumberFormatException | DateTimeParseException ex) {
             request.setAttribute("error", "Uno o más campos numéricos o de fecha tienen un formato incorrecto.");
             mostrarFormulario(request, response);
