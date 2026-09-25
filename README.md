@@ -24,11 +24,43 @@ http://localhost:8080/sismos-peru/sismos
 
 ## Rutas
 
-Se completan a medida que se van fusionando los Pull Requests de cada ticket (ver `guia-ramas-github` para el detalle rama por rama).
+| Método | Ruta | Responsabilidad |
+|---|---|---|
+| GET | `/sismos` | Listar los sismos registrados |
+| GET | `/sismos/nuevo` | Mostrar el formulario de registro |
+| POST | `/sismos/nuevo` | Validar y registrar un sismo |
+| GET | `/sismos/detalle?codigo=SIS001` | Mostrar el detalle de un sismo |
+| GET | `/sismos/editar?codigo=SIS001` | Mostrar el formulario con los datos actuales |
+| POST | `/sismos/editar` | Validar y actualizar un sismo |
+| GET | `/sismos/eliminar?codigo=SIS001` | Mostrar la confirmación de eliminación |
+| POST | `/sismos/eliminar` | Eliminar el sismo |
 
-## Estructura de paquetes
+## Flujo MVC
 
-- `pe.edu.sismos.model` — entidades.
-- `pe.edu.sismos.repository` — acceso a los datos en memoria.
-- `pe.edu.sismos.listener` — inicialización de la aplicación.
-- `pe.edu.sismos.servlet` — controladores.
+```text
+Navegador -> Servlet controlador -> request attributes -> JSP vista -> HTML
+```
+
+- `Sismo` representa los datos (record de Java).
+- `SismoRepository` mantiene los datos temporales en memoria (`CopyOnWriteArrayList`).
+- `AplicacionListener` crea el repositorio compartido y carga 5 sismos de ejemplo al iniciar.
+- Los Servlets reciben la petición, validan y preparan los atributos.
+- Las JSP presentan el HTML con Expression Language y JSTL, y están en `WEB-INF/views`, por lo que solo se llega a ellas a través de un Servlet.
+
+## Decisiones seguidas del proyecto de referencia
+
+- No se usan scriptlets `<% ... %>`.
+- Se usa `<c:out>` para escapar los datos que se muestran.
+- El Servlet vuelve a validar los datos recibidos por POST, aunque el formulario HTML también los verifique.
+- Un error de formulario se muestra con `forward` (conservando lo escrito); un registro o edición correcta usa Post/Redirect/Get.
+- No hay base de datos: el repositorio en memoria permite concentrarse en Servlets, JSP y MVC.
+
+## Alcance de esta entrega
+
+Las 8 historias trabajadas son US-11, US-01, US-02, US-31, US-41, US-12, US-21 y US-22 (ver `03_Product_Backlog_y_Plan_de_Desarrollo.md`, sección 3.3). Las validaciones de coordenadas geográficas (US-03) y de fecha no futura (US-04) están planificadas para la Fase 2 del backlog y quedan como comentarios `TODO` en `SismoNuevoServlet` y `SismoEditarServlet`, para no generar una función no documentada en `05_Requisitos_Tecnicos_del_CRUD.md`.
+
+Las vistas usan el diseño de los prototipos HTML de `04_Prototipos_de_Interfaces.md` (carpeta `prototipos-html`), adaptado a JSP con EL y JSTL.
+
+## Cómo se construyó este repositorio de práctica
+
+El código se desarrolló en 13 ramas, una por ticket, fusionadas en orden a `main` a medida que cada Pull Request se aprobaba. El detalle de cada rama (comandos, archivos y texto del PR) está en `guia-ramas-github/`.
