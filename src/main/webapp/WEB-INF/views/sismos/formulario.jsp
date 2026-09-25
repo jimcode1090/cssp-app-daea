@@ -5,50 +5,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><c:out value="${modoEdicion ? 'Editar sismo' : 'Nuevo sismo'}"/> · Sistema de Gestión de Sismos</title>
+<title>Nuevo sismo · Sistema de Gestión de Sismos</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
 <body>
 <header class="topbar"><div class="topbar-in"><a class="brand" href="${pageContext.request.contextPath}/sismos"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="3" fill="#2C5F9E"/><polyline points="3,17 9,17 12,8 16,25 20,12 23,17 29,17" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg><span class="brand-name">CSSP</span><span class="brand-sub">Sistema de Gestión de Sismos</span></a><div class="userbox">Módulo Sismos · Primera entrega</div></div></header>
 <main class="page narrow">
-<div class="crumbs"><a href="${pageContext.request.contextPath}/sismos">Sismos</a> /
-    <c:choose>
-        <c:when test="${modoEdicion}">Editar <c:out value="${codigoIngresado}"/></c:when>
-        <c:otherwise>Nuevo sismo</c:otherwise>
-    </c:choose>
-</div>
+<div class="crumbs"><a href="${pageContext.request.contextPath}/sismos">Sismos</a> / Nuevo sismo</div>
 <div class="page-head">
-    <div><h1><c:out value="${modoEdicion ? 'Editar sismo' : 'Nuevo sismo'}"/></h1>
-    <p class="lead"><c:out value="${modoEdicion ? 'Modifique los datos que necesite corregir' : 'Complete los datos del reporte'}"/></p></div>
+    <div><h1>Nuevo sismo</h1><p class="lead">Complete los datos del reporte</p></div>
 </div>
 
 <div class="card">
 <div class="card-h">Datos del sismo <small>(*) Campo obligatorio</small></div>
 <div class="card-b">
 
-<c:if test="${not empty error}">
-    <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
-</c:if>
+<form method="post" action="${pageContext.request.contextPath}/sismos/nuevo" class="form-grid">
 
-<form method="post" action="${pageContext.request.contextPath}${modoEdicion ? '/sismos/editar' : '/sismos/nuevo'}" class="form-grid">
-
-    <c:choose>
-        <c:when test="${modoEdicion}">
-            <div class="field">
-                <label>Código<span class="req">*</span></label>
-                <input type="text" value="<c:out value='${codigoIngresado}'/>" readonly>
-                <input type="hidden" name="codigo" value="<c:out value='${codigoIngresado}'/>">
-                <span class="hint">El código no se puede modificar.</span>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <div class="field">
-                <label>Código<span class="req">*</span></label>
-                <input type="text" name="codigo" value="<c:out value='${codigoIngresado}'/>" placeholder="Ej. SIS006">
-                <span class="hint">Identificador único del sismo.</span>
-            </div>
-        </c:otherwise>
-    </c:choose>
+    <div class="field">
+        <label>Código<span class="req">*</span></label>
+        <input type="text" name="codigo" value="<c:out value='${codigoIngresado}'/>" placeholder="Ej. SIS006">
+        <span class="hint">Identificador único del sismo.</span>
+    </div>
 
     <div class="field"><label>Fecha y hora<span class="req">*</span></label>
         <input type="datetime-local" name="fechaHora" value="<c:out value='${fechaHoraIngresada}'/>"></div>
@@ -69,40 +47,40 @@
         <label>Departamento<span class="req">*</span></label>
         <select name="departamento">
             <option value="">Seleccione</option>
-            <option <c:if test="${departamentoIngresado == 'Amazonas'}">selected</c:if>>Amazonas</option>
-            <option <c:if test="${departamentoIngresado == 'Áncash'}">selected</c:if>>Áncash</option>
-            <option <c:if test="${departamentoIngresado == 'Apurímac'}">selected</c:if>>Apurímac</option>
-            <option <c:if test="${departamentoIngresado == 'Arequipa'}">selected</c:if>>Arequipa</option>
-            <option <c:if test="${departamentoIngresado == 'Ayacucho'}">selected</c:if>>Ayacucho</option>
-            <option <c:if test="${departamentoIngresado == 'Cajamarca'}">selected</c:if>>Cajamarca</option>
-            <option <c:if test="${departamentoIngresado == 'Cusco'}">selected</c:if>>Cusco</option>
-            <option <c:if test="${departamentoIngresado == 'Huancavelica'}">selected</c:if>>Huancavelica</option>
-            <option <c:if test="${departamentoIngresado == 'Huánuco'}">selected</c:if>>Huánuco</option>
-            <option <c:if test="${departamentoIngresado == 'Ica'}">selected</c:if>>Ica</option>
-            <option <c:if test="${departamentoIngresado == 'Junín'}">selected</c:if>>Junín</option>
-            <option <c:if test="${departamentoIngresado == 'La Libertad'}">selected</c:if>>La Libertad</option>
-            <option <c:if test="${departamentoIngresado == 'Lambayeque'}">selected</c:if>>Lambayeque</option>
-            <option <c:if test="${departamentoIngresado == 'Lima'}">selected</c:if>>Lima</option>
-            <option <c:if test="${departamentoIngresado == 'Loreto'}">selected</c:if>>Loreto</option>
-            <option <c:if test="${departamentoIngresado == 'Madre de Dios'}">selected</c:if>>Madre de Dios</option>
-            <option <c:if test="${departamentoIngresado == 'Moquegua'}">selected</c:if>>Moquegua</option>
-            <option <c:if test="${departamentoIngresado == 'Pasco'}">selected</c:if>>Pasco</option>
-            <option <c:if test="${departamentoIngresado == 'Piura'}">selected</c:if>>Piura</option>
-            <option <c:if test="${departamentoIngresado == 'Puno'}">selected</c:if>>Puno</option>
-            <option <c:if test="${departamentoIngresado == 'San Martín'}">selected</c:if>>San Martín</option>
-            <option <c:if test="${departamentoIngresado == 'Tacna'}">selected</c:if>>Tacna</option>
-            <option <c:if test="${departamentoIngresado == 'Tumbes'}">selected</c:if>>Tumbes</option>
-            <option <c:if test="${departamentoIngresado == 'Ucayali'}">selected</c:if>>Ucayali</option>
+            <option>Amazonas</option>
+            <option>Áncash</option>
+            <option>Apurímac</option>
+            <option>Arequipa</option>
+            <option>Ayacucho</option>
+            <option>Cajamarca</option>
+            <option>Cusco</option>
+            <option>Huancavelica</option>
+            <option>Huánuco</option>
+            <option>Ica</option>
+            <option>Junín</option>
+            <option>La Libertad</option>
+            <option>Lambayeque</option>
+            <option>Lima</option>
+            <option>Loreto</option>
+            <option>Madre de Dios</option>
+            <option>Moquegua</option>
+            <option>Pasco</option>
+            <option>Piura</option>
+            <option>Puno</option>
+            <option>San Martín</option>
+            <option>Tacna</option>
+            <option>Tumbes</option>
+            <option>Ucayali</option>
         </select>
     </div>
 
     <div class="field">
         <label>Estado<span class="req">*</span></label>
         <select name="estado">
-            <option <c:if test="${empty estadoIngresado || estadoIngresado == 'Registrado'}">selected</c:if>>Registrado</option>
-            <option <c:if test="${estadoIngresado == 'En evaluación'}">selected</c:if>>En evaluación</option>
-            <option <c:if test="${estadoIngresado == 'En seguimiento'}">selected</c:if>>En seguimiento</option>
-            <option <c:if test="${estadoIngresado == 'Cerrado'}">selected</c:if>>Cerrado</option>
+            <option>Registrado</option>
+            <option>En evaluación</option>
+            <option>En seguimiento</option>
+            <option>Cerrado</option>
         </select>
     </div>
 
@@ -114,7 +92,6 @@
         <a class="btn" href="${pageContext.request.contextPath}/sismos">Cancelar</a>
     </div>
 </form>
-<p class="nota">La validación HTML ayuda al usuario; el Servlet vuelve a validar porque no debe confiar en el cliente.</p>
 </div>
 </div>
 </main>
