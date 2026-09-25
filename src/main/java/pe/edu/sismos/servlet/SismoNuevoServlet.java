@@ -13,15 +13,23 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Set;
 
 // US-01: Registrar un nuevo sismo.
 // US-02: ningún campo puede quedar vacío.
-// US-31 (Ticket 8): el código no puede repetirse; se agrega en este ticket.
-// La validación de rangos (US-41, Ticket 9) se agrega en la rama siguiente.
+// US-31: el código no puede repetirse.
+// US-41 (Ticket 9): magnitud, profundidad y estado dentro de los valores permitidos;
+// se agrega en este ticket. Con esto quedan cubiertas las 4 historias/tareas de
+// "Registrar un nuevo sismo". El redirect apunta al listado hasta que el detalle
+// (US-12, Ticket 10) exista; ese ticket lo actualiza para apuntar al detalle.
 @WebServlet(name = "SismoNuevoServlet", urlPatterns = "/sismos/nuevo")
 public class SismoNuevoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    // Usado también por SismoEditarServlet (Ticket 11): valores de estado permitidos.
+    static final Set<String> ESTADOS_VALIDOS =
+            Set.of("Registrado", "En evaluación", "En seguimiento", "Cerrado");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -72,6 +80,28 @@ public class SismoNuevoServlet extends HttpServlet {
             double profundidad = Double.parseDouble(profundidadTexto);
             double latitud = Double.parseDouble(latitudTexto);
             double longitud = Double.parseDouble(longitudTexto);
+
+            // US-41: magnitud, profundidad y estado dentro de los valores permitidos.
+            if (magnitud <= 0) {
+                request.setAttribute("error", "La magnitud debe ser un número mayor que cero");
+                mostrarFormulario(request, response);
+                return;
+            }
+            if (profundidad < 0) {
+                request.setAttribute("error", "La profundidad debe ser un número mayor o igual que cero");
+                mostrarFormulario(request, response);
+                return;
+            }
+            if (!ESTADOS_VALIDOS.contains(estado)) {
+                request.setAttribute("error", "El estado seleccionado no es válido");
+                mostrarFormulario(request, response);
+                return;
+            }
+
+            // No implementado en esta entrega (Fase 2 del backlog, fuera del alcance de la PA1):
+            // if (latitud < -90 || latitud > 90) { ... }              // US-03
+            // if (longitud < -180 || longitud > 180) { ... }          // US-03
+            // if (fechaHora.isAfter(LocalDateTime.now())) { ... }     // US-04
 
             Sismo sismo = new Sismo(codigo, fechaHora, magnitud, profundidad, latitud, longitud,
                     departamento, referencia, estado);
