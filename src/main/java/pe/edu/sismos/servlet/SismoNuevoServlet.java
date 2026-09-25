@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 // US-01: Registrar un nuevo sismo.
-// US-02 (Ticket 7): ningún campo puede quedar vacío; se agrega la validación y la
-// "zona de mensajes" en formulario.jsp. La validación de código duplicado (US-31, Ticket 8)
-// y de rangos (US-41, Ticket 9) se agregan en las ramas siguientes.
+// US-02: ningún campo puede quedar vacío.
+// US-31 (Ticket 8): el código no puede repetirse; se agrega en este ticket.
+// La validación de rangos (US-41, Ticket 9) se agrega en la rama siguiente.
 @WebServlet(name = "SismoNuevoServlet", urlPatterns = "/sismos/nuevo")
 public class SismoNuevoServlet extends HttpServlet {
 
@@ -57,6 +57,15 @@ public class SismoNuevoServlet extends HttpServlet {
             return;
         }
 
+        SismoRepository repositorio = repositorio(request);
+
+        // US-31: el código no puede repetirse.
+        if (repositorio.existeCodigo(codigo)) {
+            request.setAttribute("error", "Ya existe un sismo con el código " + codigo);
+            mostrarFormulario(request, response);
+            return;
+        }
+
         try {
             LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraTexto);
             double magnitud = Double.parseDouble(magnitudTexto);
@@ -66,7 +75,7 @@ public class SismoNuevoServlet extends HttpServlet {
 
             Sismo sismo = new Sismo(codigo, fechaHora, magnitud, profundidad, latitud, longitud,
                     departamento, referencia, estado);
-            repositorio(request).agregar(sismo);
+            repositorio.agregar(sismo);
 
             // Redirect inicia una nueva petición GET y evita repetir el POST al recargar.
             response.sendRedirect(request.getContextPath() + "/sismos");
