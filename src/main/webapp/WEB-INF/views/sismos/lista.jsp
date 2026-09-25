@@ -30,7 +30,7 @@
 <c:forEach items="${sismos}" var="sismo">
 <tr>
     <td class="code"><c:out value="${sismo.codigo}"/></td>
-    <td><c:out value="${sismo.fechaHoraTexto}"/></td>
+    <td><c:out value="${sismo.getFechaHoraTexto()}"/></td>
     <td class="num"><c:out value="${sismo.magnitud}"/></td>
     <td class="num"><c:out value="${sismo.profundidad}"/> km</td>
     <td><c:out value="${sismo.departamento}"/></td>
