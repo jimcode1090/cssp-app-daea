@@ -20,10 +20,6 @@
 <div class="card-h">Datos del sismo <small>(*) Campo obligatorio</small></div>
 <div class="card-b">
 
-<c:if test="${not empty error}">
-    <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
-</c:if>
-
 <form method="post" action="${pageContext.request.contextPath}/sismos/nuevo" class="form-grid">
 
     <div class="field">
@@ -51,40 +47,40 @@
         <label>Departamento<span class="req">*</span></label>
         <select name="departamento">
             <option value="">Seleccione</option>
-            <option <c:if test="${departamentoIngresado == 'Amazonas'}">selected</c:if>>Amazonas</option>
-            <option <c:if test="${departamentoIngresado == 'Áncash'}">selected</c:if>>Áncash</option>
-            <option <c:if test="${departamentoIngresado == 'Apurímac'}">selected</c:if>>Apurímac</option>
-            <option <c:if test="${departamentoIngresado == 'Arequipa'}">selected</c:if>>Arequipa</option>
-            <option <c:if test="${departamentoIngresado == 'Ayacucho'}">selected</c:if>>Ayacucho</option>
-            <option <c:if test="${departamentoIngresado == 'Cajamarca'}">selected</c:if>>Cajamarca</option>
-            <option <c:if test="${departamentoIngresado == 'Cusco'}">selected</c:if>>Cusco</option>
-            <option <c:if test="${departamentoIngresado == 'Huancavelica'}">selected</c:if>>Huancavelica</option>
-            <option <c:if test="${departamentoIngresado == 'Huánuco'}">selected</c:if>>Huánuco</option>
-            <option <c:if test="${departamentoIngresado == 'Ica'}">selected</c:if>>Ica</option>
-            <option <c:if test="${departamentoIngresado == 'Junín'}">selected</c:if>>Junín</option>
-            <option <c:if test="${departamentoIngresado == 'La Libertad'}">selected</c:if>>La Libertad</option>
-            <option <c:if test="${departamentoIngresado == 'Lambayeque'}">selected</c:if>>Lambayeque</option>
-            <option <c:if test="${departamentoIngresado == 'Lima'}">selected</c:if>>Lima</option>
-            <option <c:if test="${departamentoIngresado == 'Loreto'}">selected</c:if>>Loreto</option>
-            <option <c:if test="${departamentoIngresado == 'Madre de Dios'}">selected</c:if>>Madre de Dios</option>
-            <option <c:if test="${departamentoIngresado == 'Moquegua'}">selected</c:if>>Moquegua</option>
-            <option <c:if test="${departamentoIngresado == 'Pasco'}">selected</c:if>>Pasco</option>
-            <option <c:if test="${departamentoIngresado == 'Piura'}">selected</c:if>>Piura</option>
-            <option <c:if test="${departamentoIngresado == 'Puno'}">selected</c:if>>Puno</option>
-            <option <c:if test="${departamentoIngresado == 'San Martín'}">selected</c:if>>San Martín</option>
-            <option <c:if test="${departamentoIngresado == 'Tacna'}">selected</c:if>>Tacna</option>
-            <option <c:if test="${departamentoIngresado == 'Tumbes'}">selected</c:if>>Tumbes</option>
-            <option <c:if test="${departamentoIngresado == 'Ucayali'}">selected</c:if>>Ucayali</option>
+            <option>Amazonas</option>
+            <option>Áncash</option>
+            <option>Apurímac</option>
+            <option>Arequipa</option>
+            <option>Ayacucho</option>
+            <option>Cajamarca</option>
+            <option>Cusco</option>
+            <option>Huancavelica</option>
+            <option>Huánuco</option>
+            <option>Ica</option>
+            <option>Junín</option>
+            <option>La Libertad</option>
+            <option>Lambayeque</option>
+            <option>Lima</option>
+            <option>Loreto</option>
+            <option>Madre de Dios</option>
+            <option>Moquegua</option>
+            <option>Pasco</option>
+            <option>Piura</option>
+            <option>Puno</option>
+            <option>San Martín</option>
+            <option>Tacna</option>
+            <option>Tumbes</option>
+            <option>Ucayali</option>
         </select>
     </div>
 
     <div class="field">
         <label>Estado<span class="req">*</span></label>
         <select name="estado">
-            <option <c:if test="${empty estadoIngresado || estadoIngresado == 'Registrado'}">selected</c:if>>Registrado</option>
-            <option <c:if test="${estadoIngresado == 'En evaluación'}">selected</c:if>>En evaluación</option>
-            <option <c:if test="${estadoIngresado == 'En seguimiento'}">selected</c:if>>En seguimiento</option>
-            <option <c:if test="${estadoIngresado == 'Cerrado'}">selected</c:if>>Cerrado</option>
+            <option>Registrado</option>
+            <option>En evaluación</option>
+            <option>En seguimiento</option>
+            <option>Cerrado</option>
         </select>
     </div>
 
@@ -96,7 +92,6 @@
         <a class="btn" href="${pageContext.request.contextPath}/sismos">Cancelar</a>
     </div>
 </form>
-<p class="nota">La validación HTML ayuda al usuario; el Servlet vuelve a validar porque no debe confiar en el cliente.</p>
 </div>
 </div>
 </main>

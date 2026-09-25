@@ -10,21 +10,18 @@ import pe.edu.sismos.model.Sismo;
 import pe.edu.sismos.repository.SismoRepository;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.Set;
 
 // US-01: Registrar un nuevo sismo.
+// Primera versión (Ticket 6): guarda el sismo con los datos recibidos, asumiendo que
+// llegan completos y con formato correcto. La validación de campos vacíos (US-02, Ticket 7),
+// de código duplicado (US-31, Ticket 8) y de rangos (US-41, Ticket 9) se agregan en las
+// ramas siguientes, cada una en su propio Pull Request.
 @WebServlet(name = "SismoNuevoServlet", urlPatterns = "/sismos/nuevo")
 public class SismoNuevoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
-    // Usado también por SismoEditarServlet (US-41): valores de estado permitidos.
-    static final Set<String> ESTADOS_VALIDOS =
-            Set.of("Registrado", "En evaluación", "En seguimiento", "Cerrado");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,88 +45,24 @@ public class SismoNuevoServlet extends HttpServlet {
         String referencia = limpiar(request.getParameter("referencia"));
         String estado = limpiar(request.getParameter("estado"));
 
-        conservarFormulario(request, codigo, fechaHoraTexto, magnitudTexto, profundidadTexto,
-                latitudTexto, longitudTexto, departamento, referencia, estado);
+        LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraTexto);
+        double magnitud = Double.parseDouble(magnitudTexto);
+        double profundidad = Double.parseDouble(profundidadTexto);
+        double latitud = Double.parseDouble(latitudTexto);
+        double longitud = Double.parseDouble(longitudTexto);
 
-        // US-02: ningún campo puede quedar vacío.
-        if (codigo.isBlank() || fechaHoraTexto.isBlank() || magnitudTexto.isBlank()
-                || profundidadTexto.isBlank() || latitudTexto.isBlank() || longitudTexto.isBlank()
-                || departamento.isBlank() || referencia.isBlank() || estado.isBlank()) {
-            request.setAttribute("error", "Todos los campos son obligatorios.");
-            mostrarFormulario(request, response);
-            return;
-        }
+        Sismo sismo = new Sismo(codigo, fechaHora, magnitud, profundidad, latitud, longitud,
+                departamento, referencia, estado);
+        repositorio(request).agregar(sismo);
 
-        SismoRepository repositorio = repositorio(request);
-
-        // US-31: el código no puede repetirse.
-        if (repositorio.existeCodigo(codigo)) {
-            request.setAttribute("error", "Ya existe un sismo con el código " + codigo);
-            mostrarFormulario(request, response);
-            return;
-        }
-
-        try {
-            LocalDateTime fechaHora = LocalDateTime.parse(fechaHoraTexto);
-            double magnitud = Double.parseDouble(magnitudTexto);
-            double profundidad = Double.parseDouble(profundidadTexto);
-            double latitud = Double.parseDouble(latitudTexto);
-            double longitud = Double.parseDouble(longitudTexto);
-
-            // US-41: magnitud, profundidad y estado dentro de los valores permitidos.
-            if (magnitud <= 0) {
-                request.setAttribute("error", "La magnitud debe ser un número mayor que cero");
-                mostrarFormulario(request, response);
-                return;
-            }
-            if (profundidad < 0) {
-                request.setAttribute("error", "La profundidad debe ser un número mayor o igual que cero");
-                mostrarFormulario(request, response);
-                return;
-            }
-            if (!ESTADOS_VALIDOS.contains(estado)) {
-                request.setAttribute("error", "El estado seleccionado no es válido");
-                mostrarFormulario(request, response);
-                return;
-            }
-
-            // No implementado en esta entrega (Fase 2 del backlog, fuera del alcance de la PA1):
-            // if (latitud < -90 || latitud > 90) { ... }              // US-03
-            // if (longitud < -180 || longitud > 180) { ... }          // US-03
-            // if (fechaHora.isAfter(LocalDateTime.now())) { ... }     // US-04
-
-            Sismo sismo = new Sismo(codigo, fechaHora, magnitud, profundidad, latitud, longitud,
-                    departamento, referencia, estado);
-            repositorio.agregar(sismo);
-
-            // Redirect inicia una nueva petición GET y evita repetir el POST al recargar.
-            response.sendRedirect(request.getContextPath()
-                    + "/sismos/detalle?codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8)
-                    + "&creado=1");
-        } catch (NumberFormatException | DateTimeParseException ex) {
-            request.setAttribute("error", "Uno o más campos numéricos o de fecha tienen un formato incorrecto.");
-            mostrarFormulario(request, response);
-        }
+        // Redirect inicia una nueva petición GET y evita repetir el POST al recargar.
+        response.sendRedirect(request.getContextPath() + "/sismos");
     }
 
     private void mostrarFormulario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/views/sismos/formulario.jsp")
                 .forward(request, response);
-    }
-
-    private void conservarFormulario(HttpServletRequest request, String codigo, String fechaHora,
-                                      String magnitud, String profundidad, String latitud, String longitud,
-                                      String departamento, String referencia, String estado) {
-        request.setAttribute("codigoIngresado", codigo);
-        request.setAttribute("fechaHoraIngresada", fechaHora);
-        request.setAttribute("magnitudIngresada", magnitud);
-        request.setAttribute("profundidadIngresada", profundidad);
-        request.setAttribute("latitudIngresada", latitud);
-        request.setAttribute("longitudIngresada", longitud);
-        request.setAttribute("departamentoIngresado", departamento);
-        request.setAttribute("referenciaIngresada", referencia);
-        request.setAttribute("estadoIngresado", estado);
     }
 
     private SismoRepository repositorio(HttpServletRequest request) {
