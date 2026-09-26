@@ -58,7 +58,6 @@
 </table>
 <div class="tbl-foot">
     <span><c:out value="${totalSismos}"/> sismos registrados</span>
-    <span>Datos de ejemplo cargados al iniciar la aplicación</span>
 </div>
 </div>
 </div>

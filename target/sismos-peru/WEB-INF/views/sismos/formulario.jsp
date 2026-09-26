@@ -114,7 +114,6 @@
         <a class="btn" href="${pageContext.request.contextPath}/sismos">Cancelar</a>
     </div>
 </form>
-<p class="nota">La validación HTML ayuda al usuario; el Servlet vuelve a validar porque no debe confiar en el cliente.</p>
 </div>
 </div>
 </main>
