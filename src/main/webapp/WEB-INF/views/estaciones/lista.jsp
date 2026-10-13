@@ -18,6 +18,9 @@
         </svg>
         <span class="brand-name">CSSP</span><span class="brand-sub">Sistema de Gestión de Sismos</span></a></div>
 </header>
+<jsp:include page="/WEB-INF/views/_menu.jsp">
+    <jsp:param name="activa" value="estaciones"/>
+</jsp:include>
 <main class="page">
     <div class="page-head">
         <div><h1>Estaciones de monitoreo</h1>
