@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.sismos.model.Distrito;
 import pe.edu.sismos.model.Estacion;
 import pe.edu.sismos.model.Sismo;
-import pe.edu.sismos.repository.DistritoRepository;
 import pe.edu.sismos.repository.EstacionRepository;
 import pe.edu.sismos.repository.PersistenciaException;
 import pe.edu.sismos.repository.SismoRepository;
@@ -25,7 +24,6 @@ public class SismoEditarServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private final SismoRepository sismoRepository = new SismoRepository();
-    private final DistritoRepository distritoRepository = new DistritoRepository();
     private final EstacionRepository estacionRepository = new EstacionRepository();
 
     @Override
@@ -46,6 +44,7 @@ public class SismoEditarServlet extends HttpServlet {
         SismoNuevoServlet.conservarFormulario(request, sismo.getCodigo(), sismo.getFechaHora().toString(),
                 String.valueOf(sismo.getMagnitud()), String.valueOf(sismo.getProfundidad()),
                 String.valueOf(sismo.getLatitud()), String.valueOf(sismo.getLongitud()),
+                sismo.getDistrito().getProvincia().getDepartamento().getId(), sismo.getDistrito().getProvincia().getId(),
                 sismo.getDistrito().getId(), sismo.getEstacion().getId(), sismo.getReferencia(), sismo.getEstado());
 
         mostrarFormulario(request, response);
@@ -64,6 +63,8 @@ public class SismoEditarServlet extends HttpServlet {
         String profundidadTexto = limpiar(request.getParameter("profundidad"));
         String latitudTexto = limpiar(request.getParameter("latitud"));
         String longitudTexto = limpiar(request.getParameter("longitud"));
+        long departamentoId = DepartamentoEditarServlet.leerId(request.getParameter("departamentoId"));
+        long provinciaId = DepartamentoEditarServlet.leerId(request.getParameter("provinciaId"));
         long distritoId = DepartamentoEditarServlet.leerId(request.getParameter("distritoId"));
         long estacionId = DepartamentoEditarServlet.leerId(request.getParameter("estacionId"));
         String referencia = limpiar(request.getParameter("referencia"));
@@ -71,7 +72,7 @@ public class SismoEditarServlet extends HttpServlet {
 
         request.setAttribute("modoEdicion", true);
         SismoNuevoServlet.conservarFormulario(request, codigo, fechaHoraTexto, magnitudTexto, profundidadTexto,
-                latitudTexto, longitudTexto, distritoId, estacionId, referencia, estado);
+                latitudTexto, longitudTexto, departamentoId, provinciaId, distritoId, estacionId, referencia, estado);
 
         Sismo existente = sismoRepository.buscarPorCodigo(codigo).orElse(null);
         if (existente == null) {
@@ -80,12 +81,8 @@ public class SismoEditarServlet extends HttpServlet {
         }
 
         try {
-            Distrito distrito = distritoRepository.buscarPorId(distritoId)
-                    .filter(d -> "ACTIVO".equals(d.getEstado()))
-                    .orElse(null);
-            Estacion estacion = estacionRepository.buscarPorId(estacionId)
-                    .filter(e -> "ACTIVO".equals(e.getEstado()))
-                    .orElse(null);
+            Distrito distrito = SismoNuevoServlet.resolverDistrito(departamentoId, provinciaId, distritoId);
+            Estacion estacion = estacionRepository.buscarPorId(estacionId).orElse(null);
 
             // US-02 y US-41: las mismas validaciones del registro (también al editar).
             Sismo sismo = SismoNuevoServlet.construir(existente.getId(), codigo, fechaHoraTexto, magnitudTexto,
@@ -115,7 +112,8 @@ public class SismoEditarServlet extends HttpServlet {
 
     private void mostrarFormulario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SismoNuevoServlet.cargarListas(request);
+        SismoNuevoServlet.cargarListas(request, (long) request.getAttribute("departamentoIdIngresado"),
+                (long) request.getAttribute("provinciaIdIngresada"));
         request.getRequestDispatcher("/WEB-INF/views/sismos/formulario.jsp")
                 .forward(request, response);
     }
