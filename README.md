@@ -75,7 +75,7 @@ Las pantallas se mueven con el menú de arriba (Sismos, Estaciones y Ubicaciones
 | GET / POST | `/ubicaciones/departamentos/editar?id=1` | Edita el nombre |
 | POST | `/ubicaciones/departamentos/estado` | Activa o desactiva |
 
-Provincias (`/ubicaciones/provincias`) y distritos (`/ubicaciones/distritos`) tienen las mismas rutas. Además hay dos rutas que no muestran una página: entregan las provincias de un departamento (`/ubicaciones/provincias/lista?departamentoId=`) y los distritos de una provincia (`/ubicaciones/distritos/lista?provinciaId=`). Las usa el formulario de sismo para llenar sus listas encadenadas.
+Provincias (`/ubicaciones/provincias`) y distritos (`/ubicaciones/distritos`) tienen las mismas rutas. Además hay dos rutas que no muestran una página: entregan las provincias de un departamento (`/ubicaciones/provincias/lista?departamentoId=`) y los distritos de una provincia (`/ubicaciones/distritos/lista?provinciaId=`). Las usan los formularios de sismo y de estación para llenar sus listas encadenadas.
 
 ## Cómo está armado
 
@@ -103,7 +103,7 @@ Todas las restricciones están en el script (`UNIQUE` en códigos y nombres, `CH
 - **No se borra nada de verdad.** Departamentos, provincias, distritos y estaciones tienen un `estado` (activo o inactivo), y los sismos tienen `estado_registro`. "Eliminar" un sismo solo lo marca como inactivo: desaparece de las pantallas pero la fila sigue en la base de datos. Por eso el código de un sismo eliminado no se puede reutilizar.
 - **Los estados se guardan como códigos** sin tildes (`REGISTRADO`, `EN_EVALUACION`, `ACTIVO`...) y las pantallas muestran el texto normal ("En evaluación").
 - **Una ubicación o estación inactiva no se ofrece** en las listas de selección, y no se puede desactivar una ubicación que todavía tiene elementos activos debajo (por ejemplo, un distrito con sismos).
-- **Las listas encadenadas** del formulario de sismo (departamento, provincia y distrito) son lo único que usa JavaScript: un pequeño script pide esas dos rutas y rellena la lista siguiente al elegir en la anterior. Todo lo demás es Servlet y JSP.
+- **Las listas encadenadas** del formulario de sismo (departamento, provincia y distrito) y del de estación (departamento y provincia) son lo único que usa JavaScript: un pequeño script pide esas dos rutas y rellena la lista siguiente al elegir en la anterior. Todo lo demás es Servlet y JSP.
 - Nada de scriptlets `<% %>` en las JSP, y todo lo que se imprime pasa por `<c:out>`.
 - El servidor vuelve a validar todo lo que llega por POST, aunque el navegador ya lo haya validado.
 - Si un formulario tiene errores, se vuelve a mostrar con lo que el usuario ya había escrito. Si todo sale bien, se redirige (Post/Redirect/Get) para que recargar la página no repita la operación.
@@ -119,8 +119,6 @@ Son 18 historias:
 | Ubicaciones | US-19 departamentos, US-26 provincias, US-27 distritos, US-08, US-09 y US-10 editarlos, US-49 desactivar provincias, US-28 elegir una ubicación válida en el sismo |
 
 Las validaciones (campos obligatorios, código repetido, magnitud, profundidad, coordenadas, fecha no futura...) ya no son historias aparte sino reglas de negocio que aplican a las historias de arriba.
-
-Una diferencia con lo que pedía la historia US-03: el formulario de estación tiene un solo selector "Provincia (Departamento)" en vez de dos listas separadas.
 
 ## Pruebas
 

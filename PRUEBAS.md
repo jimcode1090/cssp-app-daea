@@ -43,7 +43,8 @@ Un sismo eliminado da 404 si se intenta abrir su detalle.
 
 | Historia | Criterio | Resultado |
 |---|---|---|
-| US-03 | CA1: el formulario tiene código, nombre, provincia, latitud, longitud, fecha de instalación y estado | Cumple (ver nota) |
+| US-03 | CA1: el formulario tiene código, nombre, departamento, provincia, latitud, longitud, fecha de instalación y estado | Cumple |
+| US-03 | CA1: al elegir un departamento, la lista de provincias muestra solo las de ese departamento; una provincia que no es de ese departamento, o dejarlo sin elegir, muestra "Seleccione una ubicación válida" | Cumple (falta verlo en el navegador, ver al final) |
 | US-03 | CA2: al guardar con datos válidos, la estación aparece en el listado | Cumple |
 | US-03 | CA3: código repetido muestra "Ya existe una estación con el código EST950" | Cumple |
 | US-03 | CA4: la lista de provincias solo muestra las activas | Cumple |
@@ -85,8 +86,6 @@ Un sismo eliminado da 404 si se intenta abrir su detalle.
 
 ## Lo que falta revisar a mano
 
-- **Las listas que se llenan solas (US-28).** Al elegir un departamento, la lista de provincias debería llenarse sola con las de ese departamento, y lo mismo con los distritos al elegir una provincia. Eso hay que mirarlo en el navegador: entra a "Nuevo sismo" y elige un departamento. Lo que sí está comprobado es que el sistema entrega las provincias y distritos correctos, y que al editar un sismo las tres listas ya aparecen con su ubicación.
+- **Las listas que se llenan solas (US-28 y US-03).** Al elegir un departamento, la lista de provincias debería llenarse sola con las de ese departamento, y en el sismo lo mismo con los distritos al elegir una provincia. Eso hay que mirarlo en el navegador: entra a "Nuevo sismo" o a "Nueva estación" y elige un departamento. Lo que sí está comprobado es que el sistema entrega las provincias y distritos correctos, y que al editar un sismo las tres listas ya aparecen con su ubicación.
 - **La página de error ("Algo salió mal").** Solo aparece cuando falla la base de datos, y no se provocó un fallo para verla.
 - **Cómo se ven las pantallas.** Se revisó el contenido de cada página y la alineación de los formularios con capturas, pero no hay una prueba que diga si algo "se ve bien".
-
-Una observación sobre US-03 CA1: la historia habla de los campos "departamento" y "provincia", y el formulario de estación tiene un solo selector, "Provincia (Departamento)", que ya identifica a los dos.

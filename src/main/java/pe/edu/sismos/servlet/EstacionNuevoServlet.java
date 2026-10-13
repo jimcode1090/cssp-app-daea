@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.sismos.model.Estacion;
 import pe.edu.sismos.model.Provincia;
+import pe.edu.sismos.repository.DepartamentoRepository;
 import pe.edu.sismos.repository.EstacionRepository;
 import pe.edu.sismos.repository.PersistenciaException;
 import pe.edu.sismos.repository.ProvinciaRepository;
@@ -34,16 +35,15 @@ public class EstacionNuevoServlet extends HttpServlet {
         request.setCharacterEncoding(StandardCharsets.UTF_8.name());
         String codigo = DepartamentoNuevoServlet.limpiar(request.getParameter("codigo"));
         String nombre = DepartamentoNuevoServlet.limpiar(request.getParameter("nombre"));
+        long departamentoId = DepartamentoEditarServlet.leerId(request.getParameter("departamentoId"));
         long provinciaId = DepartamentoEditarServlet.leerId(request.getParameter("provinciaId"));
         String latitud = DepartamentoNuevoServlet.limpiar(request.getParameter("latitud"));
         String longitud = DepartamentoNuevoServlet.limpiar(request.getParameter("longitud"));
         String fechaInstalacion = DepartamentoNuevoServlet.limpiar(request.getParameter("fechaInstalacion"));
         String estado = DepartamentoNuevoServlet.limpiar(request.getParameter("estado"));
-        conservarFormulario(request, codigo, nombre, provinciaId, latitud, longitud, fechaInstalacion, estado);
+        conservarFormulario(request, codigo, nombre, departamentoId, provinciaId, latitud, longitud, fechaInstalacion, estado);
         try {
-            Provincia provincia = provinciaRepository.buscarPorId(provinciaId)
-                    .filter(p -> "ACTIVO".equals(p.getEstado()))
-                    .orElse(null);
+            Provincia provincia = resolverProvincia(departamentoId, provinciaId);
             if (codigo.isBlank()) {
                 throw new IllegalArgumentException("Todos los campos son obligatorios.");
             }
@@ -66,9 +66,12 @@ public class EstacionNuevoServlet extends HttpServlet {
 
     static Estacion construir(Long id, String codigo, String nombre, Provincia provincia, String latitudTexto,
                               String longitudTexto, String fechaTexto, String estado) {
-        if (nombre.isBlank() || provincia == null || latitudTexto.isBlank() || longitudTexto.isBlank()
+        if (nombre.isBlank() || latitudTexto.isBlank() || longitudTexto.isBlank()
                 || fechaTexto.isBlank() || estado.isBlank() || !ESTADOS_VALIDOS.contains(estado)) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
+        }
+        if (provincia == null) {
+            throw new IllegalArgumentException("Seleccione una ubicación válida");
         }
         double latitud;
         double longitud;
@@ -89,10 +92,20 @@ public class EstacionNuevoServlet extends HttpServlet {
         return new Estacion(id, codigo, nombre, provincia, latitud, longitud, fechaInstalacion, estado);
     }
 
-    static void conservarFormulario(HttpServletRequest request, String codigo, String nombre, long provinciaId,
-                                    String latitud, String longitud, String fechaInstalacion, String estado) {
+    static Provincia resolverProvincia(long departamentoId, long provinciaId) {
+        return new ProvinciaRepository().buscarPorId(provinciaId)
+                .filter(p -> "ACTIVO".equals(p.getEstado())
+                        && p.getDepartamento().getId() == departamentoId
+                        && "ACTIVO".equals(p.getDepartamento().getEstado()))
+                .orElse(null);
+    }
+
+    static void conservarFormulario(HttpServletRequest request, String codigo, String nombre, long departamentoId,
+                                    long provinciaId, String latitud, String longitud, String fechaInstalacion,
+                                    String estado) {
         request.setAttribute("codigoIngresado", codigo);
         request.setAttribute("nombreIngresado", nombre);
+        request.setAttribute("departamentoIdIngresado", departamentoId);
         request.setAttribute("provinciaIdIngresada", provinciaId);
         request.setAttribute("latitudIngresada", latitud);
         request.setAttribute("longitudIngresada", longitud);
@@ -100,8 +113,15 @@ public class EstacionNuevoServlet extends HttpServlet {
         request.setAttribute("estadoIngresado", estado);
     }
 
+    static void cargarListas(HttpServletRequest request, long departamentoId) {
+        request.setAttribute("departamentos", new DepartamentoRepository().listarActivos());
+        request.setAttribute("provincias", new ProvinciaRepository().listarActivasPorDepartamento(departamentoId));
+    }
+
     private void mostrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("provincias", provinciaRepository.listarActivas());
+        long departamentoId = request.getAttribute("departamentoIdIngresado") == null
+                ? -1 : (long) request.getAttribute("departamentoIdIngresado");
+        cargarListas(request, departamentoId);
         request.getRequestDispatcher("/WEB-INF/views/estaciones/formulario.jsp").forward(request, response);
     }
 }
