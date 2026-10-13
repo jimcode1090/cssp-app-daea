@@ -10,6 +10,7 @@ import pe.edu.sismos.repository.DepartamentoRepository;
 import pe.edu.sismos.repository.PersistenciaException;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public class DepartamentoEditarServlet extends HttpServlet {
             }
             departamento.setNombre(nombre);
             departamentoRepository.guardar(departamento);
-            response.sendRedirect(request.getContextPath() + "/ubicaciones/departamentos");
+            response.sendRedirect(request.getContextPath() + "/ubicaciones/departamentos?resultado=actualizado&nombre=" + URLEncoder.encode(nombre, StandardCharsets.UTF_8));
         } catch (PersistenciaException ex) {
             request.setAttribute("error", ex.getMessage());
             mostrar(request, response);

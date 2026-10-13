@@ -12,6 +12,7 @@ import pe.edu.sismos.repository.PersistenciaException;
 import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -61,7 +62,7 @@ public class ProvinciaEditarServlet extends HttpServlet {
             provincia.setNombre(nombre);
             provincia.setDepartamento(departamento);
             provinciaRepository.guardar(provincia);
-            response.sendRedirect(request.getContextPath() + "/ubicaciones/provincias");
+            response.sendRedirect(request.getContextPath() + "/ubicaciones/provincias?resultado=actualizada&nombre=" + URLEncoder.encode(nombre, StandardCharsets.UTF_8));
         } catch (PersistenciaException ex) {
             request.setAttribute("error", ex.getMessage());
             mostrar(request, response);

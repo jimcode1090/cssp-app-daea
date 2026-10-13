@@ -17,7 +17,7 @@ public class DistritoRepository {
         try {
             return em.createQuery("SELECT d FROM Distrito d JOIN FETCH d.provincia p JOIN FETCH p.departamento ORDER BY p.departamento.nombre, p.nombre, d.nombre", Distrito.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar los distritos.", ex);
+            throw new PersistenciaException("No pudimos cargar los distritos.", ex);
         } finally {
             em.close();
         }
@@ -30,7 +30,7 @@ public class DistritoRepository {
                     .setParameter("provinciaId", provinciaId)
                     .getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar los distritos de la provincia.", ex);
+            throw new PersistenciaException("No pudimos cargar los distritos de la provincia.", ex);
         } finally {
             em.close();
         }
@@ -41,7 +41,7 @@ public class DistritoRepository {
         try {
             return Optional.ofNullable(em.find(Distrito.class, id));
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo buscar el distrito.", ex);
+            throw new PersistenciaException("No pudimos encontrar el distrito.", ex);
         } finally {
             em.close();
         }
@@ -58,7 +58,7 @@ public class DistritoRepository {
                     .stream()
                     .findFirst();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo validar el nombre del distrito.", ex);
+            throw new PersistenciaException("No pudimos comprobar el nombre del distrito.", ex);
         } finally {
             em.close();
         }
@@ -71,7 +71,7 @@ public class DistritoRepository {
                     .setParameter("provinciaId", provinciaId)
                     .getSingleResult();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron contar los distritos de la provincia.", ex);
+            throw new PersistenciaException("No pudimos revisar los distritos de la provincia.", ex);
         } finally {
             em.close();
         }
@@ -87,7 +87,7 @@ public class DistritoRepository {
             }
             return conteo;
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron contar los distritos por provincia.", ex);
+            throw new PersistenciaException("No pudimos revisar los distritos por provincia.", ex);
         } finally {
             em.close();
         }
@@ -111,7 +111,7 @@ public class DistritoRepository {
             return guardado;
         } catch (RuntimeException ex) {
             if (tx.isActive()) tx.rollback();
-            throw new PersistenciaException("No se pudo guardar el distrito. El nombre debe ser único dentro de la provincia.", ex);
+            throw new PersistenciaException("No pudimos guardar el distrito. Revisa que el nombre no esté repetido en esta provincia.", ex);
         } finally {
             em.close();
         }

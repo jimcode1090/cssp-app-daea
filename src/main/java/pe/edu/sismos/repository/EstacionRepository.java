@@ -15,7 +15,7 @@ public class EstacionRepository {
         try {
             return em.createQuery("SELECT e FROM Estacion e JOIN FETCH e.provincia p JOIN FETCH p.departamento ORDER BY e.codigo", Estacion.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar las estaciones.", ex);
+            throw new PersistenciaException("No pudimos cargar las estaciones.", ex);
         } finally {
             em.close();
         }
@@ -26,7 +26,7 @@ public class EstacionRepository {
         try {
             return em.createQuery("SELECT e FROM Estacion e JOIN FETCH e.provincia p JOIN FETCH p.departamento WHERE e.estado = 'ACTIVO' ORDER BY e.codigo", Estacion.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar las estaciones activas.", ex);
+            throw new PersistenciaException("No pudimos cargar las estaciones activas.", ex);
         } finally {
             em.close();
         }
@@ -42,7 +42,7 @@ public class EstacionRepository {
                     .stream()
                     .findFirst();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo buscar la estación.", ex);
+            throw new PersistenciaException("No pudimos encontrar la estación.", ex);
         } finally {
             em.close();
         }
@@ -53,7 +53,7 @@ public class EstacionRepository {
         try {
             return Optional.ofNullable(em.find(Estacion.class, id));
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo buscar la estación.", ex);
+            throw new PersistenciaException("No pudimos encontrar la estación.", ex);
         } finally {
             em.close();
         }
@@ -66,7 +66,7 @@ public class EstacionRepository {
                     .setParameter("provinciaId", provinciaId)
                     .getSingleResult();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron contar las estaciones de la provincia.", ex);
+            throw new PersistenciaException("No pudimos revisar las estaciones de la provincia.", ex);
         } finally {
             em.close();
         }
@@ -90,7 +90,7 @@ public class EstacionRepository {
             return guardada;
         } catch (RuntimeException ex) {
             if (tx.isActive()) tx.rollback();
-            throw new PersistenciaException("No se pudo guardar la estación. El código debe ser único.", ex);
+            throw new PersistenciaException("No pudimos guardar la estación. Revisa que el código no esté repetido.", ex);
         } finally {
             em.close();
         }

@@ -34,7 +34,7 @@
         <div class="card-b">
 
             <c:if test="${not empty error}">
-                <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
+                <div class="alert err"><c:out value="${error}"/></div>
             </c:if>
 
             <form method="post" action="${pageContext.request.contextPath}/ubicaciones/provincias/editar"

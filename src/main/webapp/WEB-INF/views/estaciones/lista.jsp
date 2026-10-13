@@ -29,6 +29,10 @@
             estación</a></div>
     </div>
 
+    <c:if test="${param.resultado == 'registrada' || param.resultado == 'actualizada' || param.resultado == 'desactivada' || param.resultado == 'activada'}">
+        <div class="alert ok">La estación <c:out value="${param.codigo}"/> fue <c:out value="${param.resultado}"/> correctamente.</div>
+    </c:if>
+
     <div class="card">
         <div class="card-b flush">
             <table class="data">

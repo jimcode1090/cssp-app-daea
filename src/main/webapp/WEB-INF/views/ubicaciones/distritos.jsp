@@ -31,8 +31,12 @@
         <jsp:param name="activa" value="distritos"/>
     </jsp:include>
 
+    <c:if test="${param.resultado == 'registrado' || param.resultado == 'actualizado' || param.resultado == 'desactivado' || param.resultado == 'activado'}">
+        <div class="alert ok">El distrito <c:out value="${param.nombre}"/> fue <c:out value="${param.resultado}"/> correctamente.</div>
+    </c:if>
+
     <c:if test="${not empty error}">
-        <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
+        <div class="alert err"><c:out value="${error}"/></div>
     </c:if>
 
     <div class="card">

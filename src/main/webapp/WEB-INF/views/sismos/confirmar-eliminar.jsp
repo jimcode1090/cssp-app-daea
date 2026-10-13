@@ -31,7 +31,7 @@
 </div>
 </div>
 
-<div class="alert warn"><b>Advertencia:</b> esta acción no se puede deshacer.</div>
+<div class="alert warn">Esta acción no se puede deshacer.</div>
 
 <form method="post" action="${pageContext.request.contextPath}/sismos/eliminar" class="actions">
     <input type="hidden" name="codigo" value="<c:out value='${sismo.codigo}'/>">
