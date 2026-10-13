@@ -1,0 +1,28 @@
+package pe.edu.sismos.servlet;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import pe.edu.sismos.model.Estacion;
+import pe.edu.sismos.repository.EstacionRepository;
+
+import java.io.IOException;
+
+// US-18: Ver los datos de una estación.
+@WebServlet(name = "EstacionDetalleServlet", urlPatterns = "/estaciones/detalle")
+public class EstacionDetalleServlet extends HttpServlet {
+    private final EstacionRepository estacionRepository = new EstacionRepository();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Estacion estacion = estacionRepository.buscarPorCodigo(DepartamentoNuevoServlet.limpiar(request.getParameter("codigo"))).orElse(null);
+        if (estacion == null) {
+            response.sendRedirect(request.getContextPath() + "/estaciones");
+            return;
+        }
+        request.setAttribute("estacion", estacion);
+        request.getRequestDispatcher("/WEB-INF/views/estaciones/detalle.jsp").forward(request, response);
+    }
+}

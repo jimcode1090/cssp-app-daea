@@ -9,6 +9,7 @@
         <class>pe.edu.sismos.model.Departamento</class>
         <class>pe.edu.sismos.model.Provincia</class>
         <class>pe.edu.sismos.model.Distrito</class>
+        <class>pe.edu.sismos.model.Estacion</class>
         <properties>
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <property name="eclipselink.logging.level" value="INFO"/>
