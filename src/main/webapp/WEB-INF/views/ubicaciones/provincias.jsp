@@ -61,6 +61,7 @@
                 <tr>
                     <th>Provincia</th>
                     <th>Departamento</th>
+                    <th class="num">Distritos</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -70,6 +71,7 @@
                     <tr>
                         <td><c:out value="${provincia.nombre}"/></td>
                         <td><c:out value="${provincia.departamento.nombre}"/></td>
+                        <td class="num"><c:out value="${empty distritosPorProvincia[provincia.id] ? 0 : distritosPorProvincia[provincia.id]}"/></td>
                         <td>
                             <c:choose>
                                 <c:when test="${provincia.estado == 'ACTIVO'}"><span

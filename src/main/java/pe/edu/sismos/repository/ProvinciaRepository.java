@@ -23,6 +23,17 @@ public class ProvinciaRepository {
         }
     }
 
+    public List<Provincia> listarActivas() {
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery("SELECT p FROM Provincia p JOIN FETCH p.departamento WHERE p.estado = 'ACTIVO' ORDER BY p.departamento.nombre, p.nombre", Provincia.class).getResultList();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudieron listar las provincias activas.", ex);
+        } finally {
+            em.close();
+        }
+    }
+
     public Optional<Provincia> buscarPorId(long id) {
         EntityManager em = JpaUtil.crearEntityManager();
         try {

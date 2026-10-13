@@ -8,7 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "provincia")
@@ -24,6 +28,9 @@ public class Provincia {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "departamento_id", nullable = false)
     private Departamento departamento;
+
+    @OneToMany(mappedBy = "provincia")
+    private List<Distrito> distritos = new ArrayList<>();
 
     public Provincia() {
     }
@@ -65,5 +72,13 @@ public class Provincia {
 
     public void setDepartamento(Departamento departamento) {
         this.departamento = departamento;
+    }
+
+    public List<Distrito> getDistritos() {
+        return distritos;
+    }
+
+    public void setDistritos(List<Distrito> distritos) {
+        this.distritos = distritos;
     }
 }
