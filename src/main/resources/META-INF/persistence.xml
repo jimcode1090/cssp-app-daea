@@ -6,9 +6,7 @@
     <persistence-unit name="CsspSismosPU" transaction-type="RESOURCE_LOCAL">
         <!-- GlassFish incluye EclipseLink como proveedor JPA por defecto. -->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <!-- Las clases @Entity se agregan aquí a medida que se crean (departamento, provincia, ...). -->
         <properties>
-            <!-- El script database/01_schema.sql manda: JPA no crea ni modifica tablas. -->
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <property name="eclipselink.logging.level" value="INFO"/>
             <property name="eclipselink.logging.parameters" value="true"/>
