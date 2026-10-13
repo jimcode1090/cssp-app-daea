@@ -9,7 +9,6 @@ import pe.edu.sismos.model.Estacion;
 import pe.edu.sismos.model.Provincia;
 import pe.edu.sismos.repository.EstacionRepository;
 import pe.edu.sismos.repository.PersistenciaException;
-import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -18,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 @WebServlet(name = "EstacionEditarServlet", urlPatterns = "/estaciones/editar")
 public class EstacionEditarServlet extends HttpServlet {
     private final EstacionRepository estacionRepository = new EstacionRepository();
-    private final ProvinciaRepository provinciaRepository = new ProvinciaRepository();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +26,7 @@ public class EstacionEditarServlet extends HttpServlet {
             return;
         }
         EstacionNuevoServlet.conservarFormulario(request, estacion.getCodigo(), estacion.getNombre(),
-                estacion.getProvincia().getId(), String.valueOf(estacion.getLatitud()),
+                estacion.getProvincia().getDepartamento().getId(), estacion.getProvincia().getId(), String.valueOf(estacion.getLatitud()),
                 String.valueOf(estacion.getLongitud()), estacion.getFechaInstalacion().toString(), estacion.getEstado());
         mostrar(request, response);
     }
@@ -43,16 +41,15 @@ public class EstacionEditarServlet extends HttpServlet {
             return;
         }
         String nombre = DepartamentoNuevoServlet.limpiar(request.getParameter("nombre"));
+        long departamentoId = DepartamentoEditarServlet.leerId(request.getParameter("departamentoId"));
         long provinciaId = DepartamentoEditarServlet.leerId(request.getParameter("provinciaId"));
         String latitud = DepartamentoNuevoServlet.limpiar(request.getParameter("latitud"));
         String longitud = DepartamentoNuevoServlet.limpiar(request.getParameter("longitud"));
         String fechaInstalacion = DepartamentoNuevoServlet.limpiar(request.getParameter("fechaInstalacion"));
         String estado = DepartamentoNuevoServlet.limpiar(request.getParameter("estado"));
-        EstacionNuevoServlet.conservarFormulario(request, codigo, nombre, provinciaId, latitud, longitud, fechaInstalacion, estado);
+        EstacionNuevoServlet.conservarFormulario(request, codigo, nombre, departamentoId, provinciaId, latitud, longitud, fechaInstalacion, estado);
         try {
-            Provincia provincia = provinciaRepository.buscarPorId(provinciaId)
-                    .filter(p -> "ACTIVO".equals(p.getEstado()))
-                    .orElse(null);
+            Provincia provincia = EstacionNuevoServlet.resolverProvincia(departamentoId, provinciaId);
             Estacion estacion = EstacionNuevoServlet.construir(existente.getId(), codigo, nombre, provincia, latitud, longitud, fechaInstalacion, estado);
             estacionRepository.guardar(estacion);
             response.sendRedirect(request.getContextPath() + "/estaciones?resultado=actualizada&codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8));
@@ -67,7 +64,7 @@ public class EstacionEditarServlet extends HttpServlet {
 
     private void mostrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("modoEdicion", true);
-        request.setAttribute("provincias", provinciaRepository.listarActivas());
+        EstacionNuevoServlet.cargarListas(request, (long) request.getAttribute("departamentoIdIngresado"));
         request.getRequestDispatcher("/WEB-INF/views/estaciones/formulario.jsp").forward(request, response);
     }
 }

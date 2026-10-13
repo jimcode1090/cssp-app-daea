@@ -21,11 +21,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     departamento.addEventListener('change', function () {
-        llenar(distrito, null, 'Seleccione un distrito');
+        if (distrito) {
+            llenar(distrito, null, 'Seleccione un distrito');
+        }
         llenar(provincia, departamento.value ? provincia.dataset.url + '?departamentoId=' + departamento.value : null, 'Seleccione una provincia');
     });
 
     provincia.addEventListener('change', function () {
-        llenar(distrito, provincia.value ? distrito.dataset.url + '?provinciaId=' + provincia.value : null, 'Seleccione un distrito');
+        if (distrito) {
+            llenar(distrito, provincia.value ? distrito.dataset.url + '?provinciaId=' + provincia.value : null, 'Seleccione un distrito');
+        }
     });
 });

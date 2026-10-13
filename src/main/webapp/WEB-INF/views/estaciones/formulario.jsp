@@ -69,12 +69,22 @@
                 <div class="field"><label>Nombre<span class="req">*</span></label>
                     <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>" placeholder="Ej. Estación Arequipa Centro"></div>
 
+                <div class="field"><label>Departamento<span class="req">*</span></label>
+                    <select id="departamentoId" name="departamentoId">
+                        <option value="">Seleccione un departamento</option>
+                        <c:forEach items="${departamentos}" var="departamento">
+                            <option value="${departamento.id}" ${departamento.id == departamentoIdIngresado ? 'selected' : ''}>
+                                <c:out value="${departamento.nombre}"/></option>
+                        </c:forEach>
+                    </select></div>
+
                 <div class="field"><label>Provincia<span class="req">*</span></label>
-                    <select name="provinciaId">
+                    <select id="provinciaId" name="provinciaId"
+                            data-url="${pageContext.request.contextPath}/ubicaciones/provincias/lista">
                         <option value="">Seleccione una provincia</option>
                         <c:forEach items="${provincias}" var="provincia">
                             <option value="${provincia.id}" ${provincia.id == provinciaIdIngresada ? 'selected' : ''}>
-                                <c:out value="${provincia.nombre} (${provincia.departamento.nombre})"/></option>
+                                <c:out value="${provincia.nombre}"/></option>
                         </c:forEach>
                     </select></div>
 
@@ -105,5 +115,6 @@
         </div>
     </div>
 </main>
+<script src="${pageContext.request.contextPath}/js/ubicacion.js"></script>
 </body>
 </html>
