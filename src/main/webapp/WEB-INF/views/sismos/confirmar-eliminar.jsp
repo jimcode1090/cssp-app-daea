@@ -23,7 +23,7 @@
     <dt>Código</dt><dd><b><c:out value="${sismo.codigo}"/></b></dd>
     <dt>Fecha</dt><dd><c:out value="${sismo.getFechaHoraTexto()}"/></dd>
     <dt>Magnitud</dt><dd><c:out value="${sismo.magnitud}"/></dd>
-    <dt>Ubicación</dt><dd><c:out value="${sismo.departamento}"/></dd>
+    <dt>Ubicación</dt><dd><c:out value="${sismo.distrito.provincia.departamento.nombre}"/></dd>
 </dl>
 </div>
 </div>

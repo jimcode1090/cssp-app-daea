@@ -38,15 +38,18 @@
     <dt>Profundidad</dt><dd><c:out value="${sismo.profundidad}"/> km</dd>
     <dt>Latitud</dt><dd><c:out value="${sismo.latitud}"/></dd>
     <dt>Longitud</dt><dd><c:out value="${sismo.longitud}"/></dd>
-    <dt>Departamento</dt><dd><c:out value="${sismo.departamento}"/></dd>
+    <dt>Departamento</dt><dd><c:out value="${sismo.distrito.provincia.departamento.nombre}"/></dd>
+    <dt>Provincia</dt><dd><c:out value="${sismo.distrito.provincia.nombre}"/></dd>
+    <dt>Distrito</dt><dd><c:out value="${sismo.distrito.nombre}"/></dd>
+    <dt>Estación</dt><dd><c:out value="${sismo.estacion.codigo}"/> · <c:out value="${sismo.estacion.nombre}"/></dd>
     <dt>Referencia geográfica</dt><dd><c:out value="${sismo.referencia}"/></dd>
     <dt>Estado</dt>
     <dd>
         <c:choose>
-            <c:when test="${sismo.estado == 'Registrado'}"><span class="badge registrado">Registrado</span></c:when>
-            <c:when test="${sismo.estado == 'En evaluación'}"><span class="badge evaluacion">En evaluación</span></c:when>
-            <c:when test="${sismo.estado == 'En seguimiento'}"><span class="badge seguimiento">En seguimiento</span></c:when>
-            <c:otherwise><span class="badge cerrado"><c:out value="${sismo.estado}"/></span></c:otherwise>
+            <c:when test="${sismo.estado == 'REGISTRADO'}"><span class="badge registrado">Registrado</span></c:when>
+            <c:when test="${sismo.estado == 'EN_EVALUACION'}"><span class="badge evaluacion">En evaluación</span></c:when>
+            <c:when test="${sismo.estado == 'EN_SEGUIMIENTO'}"><span class="badge seguimiento">En seguimiento</span></c:when>
+            <c:otherwise><span class="badge cerrado">Cerrado</span></c:otherwise>
         </c:choose>
     </dd>
 </dl>

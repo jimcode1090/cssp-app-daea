@@ -1,57 +1,134 @@
 package pe.edu.sismos.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import pe.edu.sismos.config.JpaUtil;
+import pe.edu.sismos.model.Distrito;
+import pe.edu.sismos.model.Estacion;
 import pe.edu.sismos.model.Sismo;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-/** Repositorio temporal compartido. La persistencia se incorporará en una fase posterior. */
 public class SismoRepository {
-
-    private final List<Sismo> sismos = new CopyOnWriteArrayList<>();
-
-    public SismoRepository() {
-        sismos.add(new Sismo("SIS001", LocalDateTime.of(2026, 8, 18, 14, 32),
-                5.6, 34, -16.4090, -71.5375, "Arequipa", "20 km al sur de la ciudad de Arequipa", "Registrado"));
-        sismos.add(new Sismo("SIS002", LocalDateTime.of(2026, 9, 2, 3, 10),
-                4.5, 45, -12.0464, -77.0428, "Lima", "Lima Metropolitana", "En evaluación"));
-        sismos.add(new Sismo("SIS003", LocalDateTime.of(2026, 9, 10, 21, 47),
-                4.8, 20, -13.5319, -71.9675, "Cusco", "Cusco ciudad", "Cerrado"));
-        sismos.add(new Sismo("SIS004", LocalDateTime.of(2026, 9, 14, 8, 5),
-                5.1, 60, -18.0146, -70.2536, "Tacna", "Tacna ciudad", "Registrado"));
-        sismos.add(new Sismo("SIS005", LocalDateTime.of(2026, 9, 17, 16, 20),
-                4.2, 12, -14.0678, -75.7286, "Ica", "Ica ciudad", "En seguimiento"));
-    }
+    private static final String CONSULTA_BASE = "SELECT s FROM Sismo s JOIN FETCH s.distrito d JOIN FETCH d.provincia p JOIN FETCH p.departamento JOIN FETCH s.estacion WHERE s.estadoRegistro = 'ACTIVO'";
 
     public List<Sismo> listar() {
-        return List.copyOf(sismos);
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery(CONSULTA_BASE + " ORDER BY s.id", Sismo.class).getResultList();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudieron listar los sismos.", ex);
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Sismo> listarPorEstacion(String codigoEstacion) {
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery(CONSULTA_BASE + " AND s.estacion.codigo = :codigo ORDER BY s.id", Sismo.class)
+                    .setParameter("codigo", codigoEstacion)
+                    .getResultList();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudieron listar los sismos de la estación.", ex);
+        } finally {
+            em.close();
+        }
     }
 
     public Optional<Sismo> buscarPorCodigo(String codigo) {
         if (codigo == null) {
             return Optional.empty();
         }
-        return sismos.stream()
-                .filter(s -> s.codigo().equalsIgnoreCase(codigo.trim()))
-                .findFirst();
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery(CONSULTA_BASE + " AND s.codigo = :codigo", Sismo.class)
+                    .setParameter("codigo", codigo.trim())
+                    .setMaxResults(1)
+                    .getResultList()
+                    .stream()
+                    .findFirst();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudo buscar el sismo.", ex);
+        } finally {
+            em.close();
+        }
     }
 
     public boolean existeCodigo(String codigo) {
-        return buscarPorCodigo(codigo).isPresent();
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(s) FROM Sismo s WHERE s.codigo = :codigo", Long.class)
+                    .setParameter("codigo", codigo.trim())
+                    .getSingleResult() > 0;
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudo validar el código del sismo.", ex);
+        } finally {
+            em.close();
+        }
     }
 
-    public void agregar(Sismo sismo) {
-        sismos.add(sismo);
+    public long contarActivosDeDistrito(long distritoId) {
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery("SELECT COUNT(s) FROM Sismo s WHERE s.distrito.id = :distritoId AND s.estadoRegistro = 'ACTIVO'", Long.class)
+                    .setParameter("distritoId", distritoId)
+                    .getSingleResult();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudieron contar los sismos del distrito.", ex);
+        } finally {
+            em.close();
+        }
     }
 
-    public void actualizar(Sismo sismo) {
-        buscarPorCodigo(sismo.codigo()).ifPresent(sismos::remove);
-        sismos.add(sismo);
+    public Sismo guardar(Sismo sismo) {
+        EntityManager em = JpaUtil.crearEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Sismo guardado;
+            sismo.setDistrito(em.getReference(Distrito.class, sismo.getDistrito().getId()));
+            sismo.setEstacion(em.getReference(Estacion.class, sismo.getEstacion().getId()));
+            if (sismo.getId() == null) {
+                em.persist(sismo);
+                guardado = sismo;
+            } else {
+                guardado = em.merge(sismo);
+            }
+            tx.commit();
+            return guardado;
+        } catch (RuntimeException ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new PersistenciaException("No se pudo guardar el sismo. El código debe ser único.", ex);
+        } finally {
+            em.close();
+        }
     }
 
-    public void eliminar(String codigo) {
-        buscarPorCodigo(codigo).ifPresent(sismos::remove);
+    public boolean eliminar(String codigo) {
+        EntityManager em = JpaUtil.crearEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Optional<Sismo> encontrado = em.createQuery("SELECT s FROM Sismo s WHERE s.codigo = :codigo AND s.estadoRegistro = 'ACTIVO'", Sismo.class)
+                    .setParameter("codigo", codigo.trim())
+                    .setMaxResults(1)
+                    .getResultList()
+                    .stream()
+                    .findFirst();
+            if (encontrado.isEmpty()) {
+                tx.rollback();
+                return false;
+            }
+            encontrado.get().setEstadoRegistro("INACTIVO");
+            tx.commit();
+            return true;
+        } catch (RuntimeException ex) {
+            if (tx.isActive()) tx.rollback();
+            throw new PersistenciaException("No se pudo eliminar el sismo.", ex);
+        } finally {
+            em.close();
+        }
     }
 }
