@@ -24,6 +24,10 @@
             <p class="lead">Departamentos</p></div>
     </div>
 
+    <jsp:include page="_pestanas.jsp">
+        <jsp:param name="activa" value="departamentos"/>
+    </jsp:include>
+
     <c:if test="${not empty error}">
         <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
     </c:if>
@@ -48,6 +52,7 @@
                 <thead>
                 <tr>
                     <th>Departamento</th>
+                    <th class="num">Provincias</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -56,6 +61,8 @@
                 <c:forEach items="${departamentos}" var="departamento">
                     <tr>
                         <td><c:out value="${departamento.nombre}"/></td>
+                        <td class="num"><c:out
+                                value="${empty provinciasPorDepartamento[departamento.id] ? 0 : provinciasPorDepartamento[departamento.id]}"/></td>
                         <td>
                             <c:choose>
                                 <c:when test="${departamento.estado == 'ACTIVO'}"><span
