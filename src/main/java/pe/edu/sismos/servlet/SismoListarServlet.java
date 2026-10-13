@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import pe.edu.sismos.listener.AplicacionListener;
 import pe.edu.sismos.model.Sismo;
 import pe.edu.sismos.repository.SismoRepository;
 
@@ -18,12 +17,13 @@ public class SismoListarServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private final SismoRepository sismoRepository = new SismoRepository();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        SismoRepository repositorio = repositorio(request);
-        List<Sismo> sismos = repositorio.listar();
+        List<Sismo> sismos = sismoRepository.listar();
 
         // El Servlet controla: recibe, procesa y prepara el modelo para la vista.
         request.setAttribute("sismos", sismos);
@@ -39,10 +39,5 @@ public class SismoListarServlet extends HttpServlet {
         // Forward conserva la misma request y sus atributos.
         request.getRequestDispatcher("/WEB-INF/views/sismos/lista.jsp")
                 .forward(request, response);
-    }
-
-    private SismoRepository repositorio(HttpServletRequest request) {
-        return (SismoRepository) request.getServletContext()
-                .getAttribute(AplicacionListener.REPOSITORIO_SISMOS);
     }
 }

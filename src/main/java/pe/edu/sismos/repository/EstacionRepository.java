@@ -21,6 +21,17 @@ public class EstacionRepository {
         }
     }
 
+    public List<Estacion> listarActivas() {
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery("SELECT e FROM Estacion e JOIN FETCH e.provincia p JOIN FETCH p.departamento WHERE e.estado = 'ACTIVO' ORDER BY e.codigo", Estacion.class).getResultList();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudieron listar las estaciones activas.", ex);
+        } finally {
+            em.close();
+        }
+    }
+
     public Optional<Estacion> buscarPorCodigo(String codigo) {
         EntityManager em = JpaUtil.crearEntityManager();
         try {
@@ -30,6 +41,17 @@ public class EstacionRepository {
                     .getResultList()
                     .stream()
                     .findFirst();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudo buscar la estación.", ex);
+        } finally {
+            em.close();
+        }
+    }
+
+    public Optional<Estacion> buscarPorId(long id) {
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return Optional.ofNullable(em.find(Estacion.class, id));
         } catch (RuntimeException ex) {
             throw new PersistenciaException("No se pudo buscar la estación.", ex);
         } finally {

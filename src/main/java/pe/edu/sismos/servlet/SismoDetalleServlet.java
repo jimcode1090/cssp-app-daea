@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import pe.edu.sismos.listener.AplicacionListener;
 import pe.edu.sismos.model.Sismo;
 import pe.edu.sismos.repository.SismoRepository;
 
@@ -18,14 +17,14 @@ public class SismoDetalleServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    private final SismoRepository sismoRepository = new SismoRepository();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String codigo = request.getParameter("codigo");
-        SismoRepository repositorio = (SismoRepository) getServletContext()
-                .getAttribute(AplicacionListener.REPOSITORIO_SISMOS);
-        Optional<Sismo> encontrado = repositorio.buscarPorCodigo(codigo);
+        Optional<Sismo> encontrado = sismoRepository.buscarPorCodigo(codigo);
 
         // US-25: si el código no existe, se responde con 404.
         if (encontrado.isEmpty()) {

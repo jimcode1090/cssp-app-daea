@@ -66,43 +66,34 @@
         <input type="text" name="longitud" value="<c:out value='${longitudIngresada}'/>"></div>
 
     <div class="field">
-        <label>Departamento<span class="req">*</span></label>
-        <select name="departamento">
-            <option value="">Seleccione</option>
-            <option <c:if test="${departamentoIngresado == 'Amazonas'}">selected</c:if>>Amazonas</option>
-            <option <c:if test="${departamentoIngresado == 'Áncash'}">selected</c:if>>Áncash</option>
-            <option <c:if test="${departamentoIngresado == 'Apurímac'}">selected</c:if>>Apurímac</option>
-            <option <c:if test="${departamentoIngresado == 'Arequipa'}">selected</c:if>>Arequipa</option>
-            <option <c:if test="${departamentoIngresado == 'Ayacucho'}">selected</c:if>>Ayacucho</option>
-            <option <c:if test="${departamentoIngresado == 'Cajamarca'}">selected</c:if>>Cajamarca</option>
-            <option <c:if test="${departamentoIngresado == 'Cusco'}">selected</c:if>>Cusco</option>
-            <option <c:if test="${departamentoIngresado == 'Huancavelica'}">selected</c:if>>Huancavelica</option>
-            <option <c:if test="${departamentoIngresado == 'Huánuco'}">selected</c:if>>Huánuco</option>
-            <option <c:if test="${departamentoIngresado == 'Ica'}">selected</c:if>>Ica</option>
-            <option <c:if test="${departamentoIngresado == 'Junín'}">selected</c:if>>Junín</option>
-            <option <c:if test="${departamentoIngresado == 'La Libertad'}">selected</c:if>>La Libertad</option>
-            <option <c:if test="${departamentoIngresado == 'Lambayeque'}">selected</c:if>>Lambayeque</option>
-            <option <c:if test="${departamentoIngresado == 'Lima'}">selected</c:if>>Lima</option>
-            <option <c:if test="${departamentoIngresado == 'Loreto'}">selected</c:if>>Loreto</option>
-            <option <c:if test="${departamentoIngresado == 'Madre de Dios'}">selected</c:if>>Madre de Dios</option>
-            <option <c:if test="${departamentoIngresado == 'Moquegua'}">selected</c:if>>Moquegua</option>
-            <option <c:if test="${departamentoIngresado == 'Pasco'}">selected</c:if>>Pasco</option>
-            <option <c:if test="${departamentoIngresado == 'Piura'}">selected</c:if>>Piura</option>
-            <option <c:if test="${departamentoIngresado == 'Puno'}">selected</c:if>>Puno</option>
-            <option <c:if test="${departamentoIngresado == 'San Martín'}">selected</c:if>>San Martín</option>
-            <option <c:if test="${departamentoIngresado == 'Tacna'}">selected</c:if>>Tacna</option>
-            <option <c:if test="${departamentoIngresado == 'Tumbes'}">selected</c:if>>Tumbes</option>
-            <option <c:if test="${departamentoIngresado == 'Ucayali'}">selected</c:if>>Ucayali</option>
+        <label>Distrito<span class="req">*</span></label>
+        <select name="distritoId">
+            <option value="">Seleccione un distrito</option>
+            <c:forEach items="${distritos}" var="distrito">
+                <option value="${distrito.id}" ${distrito.id == distritoIdIngresado ? 'selected' : ''}>
+                    <c:out value="${distrito.nombre}, ${distrito.provincia.nombre}, ${distrito.provincia.departamento.nombre}"/></option>
+            </c:forEach>
+        </select>
+    </div>
+
+    <div class="field">
+        <label>Estación<span class="req">*</span></label>
+        <select name="estacionId">
+            <option value="">Seleccione una estación</option>
+            <c:forEach items="${estaciones}" var="estacion">
+                <option value="${estacion.id}" ${estacion.id == estacionIdIngresada ? 'selected' : ''}>
+                    <c:out value="${estacion.codigo} · ${estacion.nombre}"/></option>
+            </c:forEach>
         </select>
     </div>
 
     <div class="field">
         <label>Estado<span class="req">*</span></label>
         <select name="estado">
-            <option <c:if test="${empty estadoIngresado || estadoIngresado == 'Registrado'}">selected</c:if>>Registrado</option>
-            <option <c:if test="${estadoIngresado == 'En evaluación'}">selected</c:if>>En evaluación</option>
-            <option <c:if test="${estadoIngresado == 'En seguimiento'}">selected</c:if>>En seguimiento</option>
-            <option <c:if test="${estadoIngresado == 'Cerrado'}">selected</c:if>>Cerrado</option>
+            <option value="REGISTRADO" ${empty estadoIngresado || estadoIngresado == 'REGISTRADO' ? 'selected' : ''}>Registrado</option>
+            <option value="EN_EVALUACION" ${estadoIngresado == 'EN_EVALUACION' ? 'selected' : ''}>En evaluación</option>
+            <option value="EN_SEGUIMIENTO" ${estadoIngresado == 'EN_SEGUIMIENTO' ? 'selected' : ''}>En seguimiento</option>
+            <option value="CERRADO" ${estadoIngresado == 'CERRADO' ? 'selected' : ''}>Cerrado</option>
         </select>
     </div>
 

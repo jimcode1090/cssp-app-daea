@@ -23,6 +23,17 @@ public class DistritoRepository {
         }
     }
 
+    public List<Distrito> listarActivos() {
+        EntityManager em = JpaUtil.crearEntityManager();
+        try {
+            return em.createQuery("SELECT d FROM Distrito d JOIN FETCH d.provincia p JOIN FETCH p.departamento WHERE d.estado = 'ACTIVO' ORDER BY p.departamento.nombre, p.nombre, d.nombre", Distrito.class).getResultList();
+        } catch (RuntimeException ex) {
+            throw new PersistenciaException("No se pudieron listar los distritos activos.", ex);
+        } finally {
+            em.close();
+        }
+    }
+
     public Optional<Distrito> buscarPorId(long id) {
         EntityManager em = JpaUtil.crearEntityManager();
         try {

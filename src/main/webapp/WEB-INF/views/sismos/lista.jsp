@@ -33,13 +33,13 @@
     <td><c:out value="${sismo.getFechaHoraTexto()}"/></td>
     <td class="num"><c:out value="${sismo.magnitud}"/></td>
     <td class="num"><c:out value="${sismo.profundidad}"/> km</td>
-    <td><c:out value="${sismo.departamento}"/></td>
+    <td><c:out value="${sismo.distrito.provincia.departamento.nombre}"/></td>
     <td>
         <c:choose>
-            <c:when test="${sismo.estado == 'Registrado'}"><span class="badge registrado">Registrado</span></c:when>
-            <c:when test="${sismo.estado == 'En evaluación'}"><span class="badge evaluacion">En evaluación</span></c:when>
-            <c:when test="${sismo.estado == 'En seguimiento'}"><span class="badge seguimiento">En seguimiento</span></c:when>
-            <c:otherwise><span class="badge cerrado"><c:out value="${sismo.estado}"/></span></c:otherwise>
+            <c:when test="${sismo.estado == 'REGISTRADO'}"><span class="badge registrado">Registrado</span></c:when>
+            <c:when test="${sismo.estado == 'EN_EVALUACION'}"><span class="badge evaluacion">En evaluación</span></c:when>
+            <c:when test="${sismo.estado == 'EN_SEGUIMIENTO'}"><span class="badge seguimiento">En seguimiento</span></c:when>
+            <c:otherwise><span class="badge cerrado">Cerrado</span></c:otherwise>
         </c:choose>
     </td>
     <td>

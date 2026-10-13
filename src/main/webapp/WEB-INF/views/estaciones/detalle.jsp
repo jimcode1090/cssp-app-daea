@@ -57,6 +57,37 @@
             </dl>
         </div>
     </div>
+
+    <c:if test="${not empty sismos}">
+        <div class="card">
+            <div class="card-h">Sismos asociados</div>
+            <div class="card-b flush">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Fecha y hora</th>
+                        <th class="num">Magnitud</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${sismos}" var="sismo">
+                        <tr>
+                            <td class="code"><c:out value="${sismo.codigo}"/></td>
+                            <td><c:out value="${sismo.fechaHoraTexto}"/></td>
+                            <td class="num"><c:out value="${sismo.magnitud}"/></td>
+                            <td>
+                                <a class="btn sm"
+                                   href="${pageContext.request.contextPath}/sismos/detalle?codigo=${sismo.codigo}">Ver</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:if>
 </main>
 </body>
 </html>

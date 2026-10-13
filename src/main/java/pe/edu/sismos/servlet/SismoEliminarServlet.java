@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import pe.edu.sismos.listener.AplicacionListener;
 import pe.edu.sismos.model.Sismo;
 import pe.edu.sismos.repository.SismoRepository;
 
@@ -15,26 +14,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 // US-22: Eliminar un sismo con confirmación previa.
-// Igual que Editar, el profesor no llegó a mostrar esta pantalla en clase, pero está
-// definida en la sección 5.7 y sigue el mismo patrón GET (confirmar) / POST (eliminar).
 @WebServlet(name = "SismoEliminarServlet", urlPatterns = "/sismos/eliminar")
 public class SismoEliminarServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    private final SismoRepository sismoRepository = new SismoRepository();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String codigo = request.getParameter("codigo");
-        SismoRepository repositorio = repositorio(request);
-        Optional<Sismo> encontrado = repositorio.buscarPorCodigo(codigo);
+        Optional<Sismo> encontrado = sismoRepository.buscarPorCodigo(codigo);
 
         if (encontrado.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            request.setAttribute("mensajeError", "No existe un sismo con el código solicitado.");
-            request.getRequestDispatcher("/WEB-INF/views/error/404.jsp")
-                    .forward(request, response);
+            noEncontrado(request, response);
             return;
         }
 
@@ -49,25 +44,22 @@ public class SismoEliminarServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String codigo = request.getParameter("codigo");
-        SismoRepository repositorio = repositorio(request);
 
-        if (repositorio.buscarPorCodigo(codigo).isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            request.setAttribute("mensajeError", "No existe un sismo con el código solicitado.");
-            request.getRequestDispatcher("/WEB-INF/views/error/404.jsp")
-                    .forward(request, response);
+        // US-22 (CA3): se da de baja (el registro queda inactivo) y se redirige al listado con un mensaje.
+        if (codigo == null || !sismoRepository.eliminar(codigo)) {
+            noEncontrado(request, response);
             return;
         }
-
-        // US-22 (CA3): se elimina y se redirige al listado con un mensaje de confirmación.
-        repositorio.eliminar(codigo);
 
         response.sendRedirect(request.getContextPath()
                 + "/sismos?eliminado=1&codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8));
     }
 
-    private SismoRepository repositorio(HttpServletRequest request) {
-        return (SismoRepository) request.getServletContext()
-                .getAttribute(AplicacionListener.REPOSITORIO_SISMOS);
+    private void noEncontrado(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        request.setAttribute("mensajeError", "No existe un sismo con el código solicitado.");
+        request.getRequestDispatcher("/WEB-INF/views/error/404.jsp")
+                .forward(request, response);
     }
 }
