@@ -11,11 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/** Crea EntityManager para la unidad de persistencia JPA. */
+/**
+ * Crea EntityManager para la unidad de persistencia JPA.
+ */
 public final class JpaUtil {
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = crearFactory();
 
-    private JpaUtil() { }
+    private JpaUtil() {
+    }
 
     public static EntityManager crearEntityManager() {
         return ENTITY_MANAGER_FACTORY.createEntityManager();

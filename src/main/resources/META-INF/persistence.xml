@@ -6,6 +6,7 @@
     <persistence-unit name="CsspSismosPU" transaction-type="RESOURCE_LOCAL">
         <!-- GlassFish incluye EclipseLink como proveedor JPA por defecto. -->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>pe.edu.sismos.model.Departamento</class>
         <properties>
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <property name="eclipselink.logging.level" value="INFO"/>
