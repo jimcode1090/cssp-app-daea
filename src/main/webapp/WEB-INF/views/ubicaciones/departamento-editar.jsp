@@ -18,6 +18,9 @@
         </svg>
         <span class="brand-name">CSSP</span><span class="brand-sub">Sistema de Gestión de Sismos</span></a></div>
 </header>
+<jsp:include page="/WEB-INF/views/_menu.jsp">
+    <jsp:param name="activa" value="ubicaciones"/>
+</jsp:include>
 <main class="page narrow">
     <div class="crumbs"><a href="${pageContext.request.contextPath}/ubicaciones/departamentos">Departamentos</a> /
         Editar
