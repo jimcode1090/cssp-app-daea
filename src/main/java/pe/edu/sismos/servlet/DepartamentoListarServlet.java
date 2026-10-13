@@ -6,17 +6,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.sismos.repository.DepartamentoRepository;
+import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 
 // US-19: Gestionar departamentos (listado y formulario Agregar).
 @WebServlet(name = "DepartamentoListarServlet", urlPatterns = "/ubicaciones/departamentos")
 public class DepartamentoListarServlet extends HttpServlet {
-    private final DepartamentoRepository departamentoRepository = new DepartamentoRepository();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("departamentos", departamentoRepository.listar());
+        mostrar(request, response);
+    }
+
+    static void mostrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("departamentos", new DepartamentoRepository().listar());
+        request.setAttribute("provinciasPorDepartamento", new ProvinciaRepository().contarActivasPorDepartamento());
         request.getRequestDispatcher("/WEB-INF/views/ubicaciones/departamentos.jsp").forward(request, response);
     }
 }

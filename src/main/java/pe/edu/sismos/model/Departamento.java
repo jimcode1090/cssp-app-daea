@@ -5,7 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "departamento")
@@ -17,6 +21,9 @@ public class Departamento {
     private String nombre;
     @Column(nullable = false, length = 10)
     private String estado;
+
+    @OneToMany(mappedBy = "departamento")
+    private List<Provincia> provincias = new ArrayList<>();
 
     public Departamento() {
     }
@@ -49,5 +56,13 @@ public class Departamento {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public List<Provincia> getProvincias() {
+        return provincias;
+    }
+
+    public void setProvincias(List<Provincia> provincias) {
+        this.provincias = provincias;
     }
 }

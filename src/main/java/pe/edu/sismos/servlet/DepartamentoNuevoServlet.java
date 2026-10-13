@@ -25,28 +25,23 @@ public class DepartamentoNuevoServlet extends HttpServlet {
         try {
             if (nombre.isBlank()) {
                 request.setAttribute("error", "Todos los campos son obligatorios.");
-                mostrar(request, response);
+                DepartamentoListarServlet.mostrar(request, response);
                 return;
             }
             if (departamentoRepository.buscarPorNombre(nombre).isPresent()) {
                 request.setAttribute("error", "El departamento ya existe");
-                mostrar(request, response);
+                DepartamentoListarServlet.mostrar(request, response);
                 return;
             }
             departamentoRepository.guardar(new Departamento(null, nombre, "ACTIVO"));
             response.sendRedirect(request.getContextPath() + "/ubicaciones/departamentos");
         } catch (PersistenciaException ex) {
             request.setAttribute("error", ex.getMessage());
-            mostrar(request, response);
+            DepartamentoListarServlet.mostrar(request, response);
         }
     }
 
     static String limpiar(String valor) {
         return valor == null ? "" : valor.trim();
-    }
-
-    private void mostrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("departamentos", departamentoRepository.listar());
-        request.getRequestDispatcher("/WEB-INF/views/ubicaciones/departamentos.jsp").forward(request, response);
     }
 }
