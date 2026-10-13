@@ -11,6 +11,8 @@ import pe.edu.sismos.repository.EstacionRepository;
 import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet(name = "ProvinciaEstadoServlet", urlPatterns = "/ubicaciones/provincias/estado")
 public class ProvinciaEstadoServlet extends HttpServlet {
@@ -21,6 +23,7 @@ public class ProvinciaEstadoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Provincia provincia = provinciaRepository.buscarPorId(DepartamentoEditarServlet.leerId(request.getParameter("id"))).orElse(null);
+        String resultado = "";
         if (provincia != null) {
             if ("ACTIVO".equals(provincia.getEstado())) {
                 if (distritoRepository.contarActivosDeProvincia(provincia.getId()) > 0) {
@@ -38,7 +41,8 @@ public class ProvinciaEstadoServlet extends HttpServlet {
                 provincia.setEstado("ACTIVO");
             }
             provinciaRepository.guardar(provincia);
+            resultado = "?resultado=" + ("INACTIVO".equals(provincia.getEstado()) ? "desactivada" : "activada") + "&nombre=" + URLEncoder.encode(provincia.getNombre(), StandardCharsets.UTF_8);
         }
-        response.sendRedirect(request.getContextPath() + "/ubicaciones/provincias");
+        response.sendRedirect(request.getContextPath() + "/ubicaciones/provincias" + resultado);
     }
 }

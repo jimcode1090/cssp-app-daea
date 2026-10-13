@@ -20,7 +20,7 @@
 </div>
 
 <c:if test="${eliminado}">
-    <div class="alert ok"><b>Zona de mensajes:</b> El sismo <c:out value="${codigoEliminado}"/> fue eliminado correctamente.</div>
+    <div class="alert ok">El sismo <c:out value="${codigoEliminado}"/> fue eliminado correctamente.</div>
 </c:if>
 
 <div class="card">

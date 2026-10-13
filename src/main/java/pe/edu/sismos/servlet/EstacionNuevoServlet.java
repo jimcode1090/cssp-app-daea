@@ -12,6 +12,7 @@ import pe.edu.sismos.repository.PersistenciaException;
 import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -53,7 +54,7 @@ public class EstacionNuevoServlet extends HttpServlet {
             }
             Estacion estacion = construir(null, codigo, nombre, provincia, latitud, longitud, fechaInstalacion, estado);
             estacionRepository.guardar(estacion);
-            response.sendRedirect(request.getContextPath() + "/estaciones");
+            response.sendRedirect(request.getContextPath() + "/estaciones?resultado=registrada&codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8));
         } catch (IllegalArgumentException ex) {
             request.setAttribute("error", ex.getMessage());
             mostrar(request, response);
@@ -77,7 +78,7 @@ public class EstacionNuevoServlet extends HttpServlet {
             longitud = Double.parseDouble(longitudTexto);
             fechaInstalacion = LocalDate.parse(fechaTexto);
         } catch (NumberFormatException | DateTimeParseException ex) {
-            throw new IllegalArgumentException("Uno o más campos numéricos o de fecha tienen un formato incorrecto.");
+            throw new IllegalArgumentException("Revisa los números y la fecha: alguno no tiene un formato válido.");
         }
         if (latitud < -90 || latitud > 90) {
             throw new IllegalArgumentException("La latitud debe estar entre -90 y 90");

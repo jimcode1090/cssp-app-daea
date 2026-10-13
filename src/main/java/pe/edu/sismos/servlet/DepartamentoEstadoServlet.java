@@ -10,6 +10,8 @@ import pe.edu.sismos.repository.DepartamentoRepository;
 import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet(name = "DepartamentoEstadoServlet", urlPatterns = "/ubicaciones/departamentos/estado")
 public class DepartamentoEstadoServlet extends HttpServlet {
@@ -19,6 +21,7 @@ public class DepartamentoEstadoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Departamento departamento = departamentoRepository.buscarPorId(DepartamentoEditarServlet.leerId(request.getParameter("id"))).orElse(null);
+        String resultado = "";
         if (departamento != null) {
             if ("ACTIVO".equals(departamento.getEstado())) {
                 if (provinciaRepository.contarActivasDeDepartamento(departamento.getId()) > 0) {
@@ -31,7 +34,8 @@ public class DepartamentoEstadoServlet extends HttpServlet {
                 departamento.setEstado("ACTIVO");
             }
             departamentoRepository.guardar(departamento);
+            resultado = "?resultado=" + ("INACTIVO".equals(departamento.getEstado()) ? "desactivado" : "activado") + "&nombre=" + URLEncoder.encode(departamento.getNombre(), StandardCharsets.UTF_8);
         }
-        response.sendRedirect(request.getContextPath() + "/ubicaciones/departamentos");
+        response.sendRedirect(request.getContextPath() + "/ubicaciones/departamentos" + resultado);
     }
 }

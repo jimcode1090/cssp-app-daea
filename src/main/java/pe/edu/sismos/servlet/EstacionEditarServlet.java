@@ -12,6 +12,7 @@ import pe.edu.sismos.repository.PersistenciaException;
 import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @WebServlet(name = "EstacionEditarServlet", urlPatterns = "/estaciones/editar")
@@ -54,7 +55,7 @@ public class EstacionEditarServlet extends HttpServlet {
                     .orElse(null);
             Estacion estacion = EstacionNuevoServlet.construir(existente.getId(), codigo, nombre, provincia, latitud, longitud, fechaInstalacion, estado);
             estacionRepository.guardar(estacion);
-            response.sendRedirect(request.getContextPath() + "/estaciones");
+            response.sendRedirect(request.getContextPath() + "/estaciones?resultado=actualizada&codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8));
         } catch (IllegalArgumentException ex) {
             request.setAttribute("error", ex.getMessage());
             mostrar(request, response);

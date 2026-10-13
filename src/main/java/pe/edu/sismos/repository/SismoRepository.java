@@ -18,7 +18,7 @@ public class SismoRepository {
         try {
             return em.createQuery(CONSULTA_BASE + " ORDER BY s.id", Sismo.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar los sismos.", ex);
+            throw new PersistenciaException("No pudimos cargar los sismos.", ex);
         } finally {
             em.close();
         }
@@ -31,7 +31,7 @@ public class SismoRepository {
                     .setParameter("codigo", codigoEstacion)
                     .getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar los sismos de la estación.", ex);
+            throw new PersistenciaException("No pudimos cargar los sismos de la estación.", ex);
         } finally {
             em.close();
         }
@@ -50,7 +50,7 @@ public class SismoRepository {
                     .stream()
                     .findFirst();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo buscar el sismo.", ex);
+            throw new PersistenciaException("No pudimos encontrar el sismo.", ex);
         } finally {
             em.close();
         }
@@ -63,7 +63,7 @@ public class SismoRepository {
                     .setParameter("codigo", codigo.trim())
                     .getSingleResult() > 0;
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo validar el código del sismo.", ex);
+            throw new PersistenciaException("No pudimos comprobar el código del sismo.", ex);
         } finally {
             em.close();
         }
@@ -76,7 +76,7 @@ public class SismoRepository {
                     .setParameter("distritoId", distritoId)
                     .getSingleResult();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron contar los sismos del distrito.", ex);
+            throw new PersistenciaException("No pudimos revisar los sismos del distrito.", ex);
         } finally {
             em.close();
         }
@@ -100,7 +100,7 @@ public class SismoRepository {
             return guardado;
         } catch (RuntimeException ex) {
             if (tx.isActive()) tx.rollback();
-            throw new PersistenciaException("No se pudo guardar el sismo. El código debe ser único.", ex);
+            throw new PersistenciaException("No pudimos guardar el sismo. Revisa que el código no esté repetido.", ex);
         } finally {
             em.close();
         }
@@ -126,7 +126,7 @@ public class SismoRepository {
             return true;
         } catch (RuntimeException ex) {
             if (tx.isActive()) tx.rollback();
-            throw new PersistenciaException("No se pudo eliminar el sismo.", ex);
+            throw new PersistenciaException("No pudimos eliminar el sismo.", ex);
         } finally {
             em.close();
         }

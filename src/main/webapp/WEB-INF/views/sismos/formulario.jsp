@@ -42,7 +42,7 @@
         <div class="card-b">
 
             <c:if test="${not empty error}">
-                <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
+                <div class="alert err"><c:out value="${error}"/></div>
             </c:if>
 
             <form method="post"
@@ -72,17 +72,17 @@
                     <input type="datetime-local" name="fechaHora" value="<c:out value='${fechaHoraIngresada}'/>"></div>
 
                 <div class="field"><label>Magnitud<span class="req">*</span></label>
-                    <input type="number" step="0.1" name="magnitud" value="<c:out value='${magnitudIngresada}'/>"></div>
+                    <input type="number" step="0.1" name="magnitud" value="<c:out value='${magnitudIngresada}'/>" placeholder="Ej. 4.5"></div>
 
                 <div class="field"><label>Profundidad (km)<span class="req">*</span></label>
-                    <input type="number" step="0.1" name="profundidad" value="<c:out value='${profundidadIngresada}'/>">
+                    <input type="number" step="0.1" name="profundidad" value="<c:out value='${profundidadIngresada}'/>" placeholder="Ej. 30 (en km)">
                 </div>
 
                 <div class="field"><label>Latitud<span class="req">*</span></label>
-                    <input type="text" name="latitud" value="<c:out value='${latitudIngresada}'/>"></div>
+                    <input type="text" name="latitud" value="<c:out value='${latitudIngresada}'/>" placeholder="Ej. -12.0464"></div>
 
                 <div class="field"><label>Longitud<span class="req">*</span></label>
-                    <input type="text" name="longitud" value="<c:out value='${longitudIngresada}'/>"></div>
+                    <input type="text" name="longitud" value="<c:out value='${longitudIngresada}'/>" placeholder="Ej. -77.0428"></div>
 
                 <div class="field">
                     <label>Departamento<span class="req">*</span></label>

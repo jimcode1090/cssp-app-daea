@@ -31,17 +31,21 @@
         <jsp:param name="activa" value="departamentos"/>
     </jsp:include>
 
+    <c:if test="${param.resultado == 'registrado' || param.resultado == 'actualizado' || param.resultado == 'desactivado' || param.resultado == 'activado'}">
+        <div class="alert ok">El departamento <c:out value="${param.nombre}"/> fue <c:out value="${param.resultado}"/> correctamente.</div>
+    </c:if>
+
     <c:if test="${not empty error}">
-        <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
+        <div class="alert err"><c:out value="${error}"/></div>
     </c:if>
 
     <div class="card">
         <div class="card-h">Nuevo departamento</div>
         <div class="card-b">
             <form method="post" action="${pageContext.request.contextPath}/ubicaciones/departamentos/nuevo"
-                  class="form-grid">
+                  class="form-inline">
                 <div class="field"><label>Nombre<span class="req">*</span></label>
-                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>"></div>
+                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>" placeholder="Ej. Arequipa"></div>
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Agregar</button>
                 </div>

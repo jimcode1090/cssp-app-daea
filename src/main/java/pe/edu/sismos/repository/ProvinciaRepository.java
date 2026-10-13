@@ -17,7 +17,7 @@ public class ProvinciaRepository {
         try {
             return em.createQuery("SELECT p FROM Provincia p JOIN FETCH p.departamento ORDER BY p.departamento.nombre, p.nombre", Provincia.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar las provincias.", ex);
+            throw new PersistenciaException("No pudimos cargar las provincias.", ex);
         } finally {
             em.close();
         }
@@ -28,7 +28,7 @@ public class ProvinciaRepository {
         try {
             return em.createQuery("SELECT p FROM Provincia p JOIN FETCH p.departamento WHERE p.estado = 'ACTIVO' ORDER BY p.departamento.nombre, p.nombre", Provincia.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar las provincias activas.", ex);
+            throw new PersistenciaException("No pudimos cargar las provincias activas.", ex);
         } finally {
             em.close();
         }
@@ -41,7 +41,7 @@ public class ProvinciaRepository {
                     .setParameter("departamentoId", departamentoId)
                     .getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar las provincias del departamento.", ex);
+            throw new PersistenciaException("No pudimos cargar las provincias del departamento.", ex);
         } finally {
             em.close();
         }
@@ -52,7 +52,7 @@ public class ProvinciaRepository {
         try {
             return Optional.ofNullable(em.find(Provincia.class, id));
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo buscar la provincia.", ex);
+            throw new PersistenciaException("No pudimos encontrar la provincia.", ex);
         } finally {
             em.close();
         }
@@ -69,7 +69,7 @@ public class ProvinciaRepository {
                     .stream()
                     .findFirst();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo validar el nombre de la provincia.", ex);
+            throw new PersistenciaException("No pudimos comprobar el nombre de la provincia.", ex);
         } finally {
             em.close();
         }
@@ -82,7 +82,7 @@ public class ProvinciaRepository {
                     .setParameter("departamentoId", departamentoId)
                     .getSingleResult();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron contar las provincias del departamento.", ex);
+            throw new PersistenciaException("No pudimos revisar las provincias del departamento.", ex);
         } finally {
             em.close();
         }
@@ -98,7 +98,7 @@ public class ProvinciaRepository {
             }
             return conteo;
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron contar las provincias por departamento.", ex);
+            throw new PersistenciaException("No pudimos revisar las provincias por departamento.", ex);
         } finally {
             em.close();
         }
@@ -122,7 +122,7 @@ public class ProvinciaRepository {
             return guardada;
         } catch (RuntimeException ex) {
             if (tx.isActive()) tx.rollback();
-            throw new PersistenciaException("No se pudo guardar la provincia. El nombre debe ser único dentro del departamento.", ex);
+            throw new PersistenciaException("No pudimos guardar la provincia. Revisa que el nombre no esté repetido en este departamento.", ex);
         } finally {
             em.close();
         }

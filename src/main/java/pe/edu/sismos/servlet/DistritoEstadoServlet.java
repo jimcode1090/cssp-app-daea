@@ -10,6 +10,8 @@ import pe.edu.sismos.repository.DistritoRepository;
 import pe.edu.sismos.repository.SismoRepository;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet(name = "DistritoEstadoServlet", urlPatterns = "/ubicaciones/distritos/estado")
 public class DistritoEstadoServlet extends HttpServlet {
@@ -19,6 +21,7 @@ public class DistritoEstadoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Distrito distrito = distritoRepository.buscarPorId(DepartamentoEditarServlet.leerId(request.getParameter("id"))).orElse(null);
+        String resultado = "";
         if (distrito != null) {
             if ("ACTIVO".equals(distrito.getEstado())) {
                 if (sismoRepository.contarActivosDeDistrito(distrito.getId()) > 0) {
@@ -31,7 +34,8 @@ public class DistritoEstadoServlet extends HttpServlet {
                 distrito.setEstado("ACTIVO");
             }
             distritoRepository.guardar(distrito);
+            resultado = "?resultado=" + ("INACTIVO".equals(distrito.getEstado()) ? "desactivado" : "activado") + "&nombre=" + URLEncoder.encode(distrito.getNombre(), StandardCharsets.UTF_8);
         }
-        response.sendRedirect(request.getContextPath() + "/ubicaciones/distritos");
+        response.sendRedirect(request.getContextPath() + "/ubicaciones/distritos" + resultado);
     }
 }

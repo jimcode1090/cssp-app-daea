@@ -123,7 +123,11 @@ table.data td.code { font-weight: 600; color: var(--navy-900); font-variant-nume
 .field input[readonly] { background: #EEF1F5; color: var(--ink-500); }
 .field.invalid input, .field.invalid select { border-color: var(--danger); background: #FCF4F5; }
 .hint { font-size: 12px; color: var(--ink-500); }
-.form-actions { display: flex; gap: 10px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line-200); }
+.form-actions { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line-200); }
+.form-inline { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.form-inline .field { flex: 1 1 240px; }
+.form-inline .form-actions { margin: 0; padding: 0; border: 0; }
+.form-inline .btn { height: 38px; }
 .filters { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px 16px; align-items: end; }
 .filters .c3 { grid-column: span 3; } .filters .c2 { grid-column: span 2; } .filters .c4 { grid-column: span 4; } .filters .c6 { grid-column: span 6; }
 .filters .end { display: flex; gap: 10px; justify-content: flex-end; }

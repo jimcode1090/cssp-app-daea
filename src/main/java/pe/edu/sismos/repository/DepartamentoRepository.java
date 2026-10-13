@@ -14,7 +14,7 @@ public class DepartamentoRepository {
         try {
             return em.createQuery("SELECT d FROM Departamento d ORDER BY d.nombre", Departamento.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar los departamentos.", ex);
+            throw new PersistenciaException("No pudimos cargar los departamentos.", ex);
         } finally {
             em.close();
         }
@@ -25,7 +25,7 @@ public class DepartamentoRepository {
         try {
             return em.createQuery("SELECT d FROM Departamento d WHERE d.estado = 'ACTIVO' ORDER BY d.nombre", Departamento.class).getResultList();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudieron listar los departamentos activos.", ex);
+            throw new PersistenciaException("No pudimos cargar los departamentos activos.", ex);
         } finally {
             em.close();
         }
@@ -50,7 +50,7 @@ public class DepartamentoRepository {
             return resultado;
         } catch (RuntimeException ex) {
             if (tx.isActive()) tx.rollback();
-            throw new PersistenciaException("No se pudo guardar el departamento. El nombre debe ser único.", ex);
+            throw new PersistenciaException("No pudimos guardar el departamento. Revisa que el nombre no esté repetido.", ex);
         } finally {
             em.close();
         }
@@ -61,7 +61,7 @@ public class DepartamentoRepository {
         try {
             return em.createQuery(jpql, Departamento.class).setParameter("valor", valor).setMaxResults(1).getResultList().stream().findFirst();
         } catch (RuntimeException ex) {
-            throw new PersistenciaException("No se pudo buscar el departamento.", ex);
+            throw new PersistenciaException("No pudimos encontrar el departamento.", ex);
         } finally {
             em.close();
         }

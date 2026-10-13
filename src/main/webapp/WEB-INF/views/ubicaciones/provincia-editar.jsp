@@ -34,7 +34,7 @@
         <div class="card-b">
 
             <c:if test="${not empty error}">
-                <div class="alert err"><b>Zona de mensajes de validación:</b> <c:out value="${error}"/></div>
+                <div class="alert err"><c:out value="${error}"/></div>
             </c:if>
 
             <form method="post" action="${pageContext.request.contextPath}/ubicaciones/provincias/editar"
@@ -48,7 +48,7 @@
                         </c:forEach>
                     </select></div>
                 <div class="field"><label>Nombre<span class="req">*</span></label>
-                    <input type="text" name="nombre" value="<c:out value='${provincia.nombre}'/>"></div>
+                    <input type="text" name="nombre" value="<c:out value='${provincia.nombre}'/>" placeholder="Ej. Lima"></div>
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Guardar</button>
                     <a class="btn" href="${pageContext.request.contextPath}/ubicaciones/provincias">Cancelar</a>

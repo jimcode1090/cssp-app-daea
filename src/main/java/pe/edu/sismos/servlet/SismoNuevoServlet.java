@@ -139,7 +139,7 @@ public class SismoNuevoServlet extends HttpServlet {
             latitud = Double.parseDouble(latitudTexto);
             longitud = Double.parseDouble(longitudTexto);
         } catch (NumberFormatException | DateTimeParseException ex) {
-            throw new IllegalArgumentException("Uno o más campos numéricos o de fecha tienen un formato incorrecto.");
+            throw new IllegalArgumentException("Revisa los números y la fecha: alguno no tiene un formato válido.");
         }
 
         if (latitud < -90 || latitud > 90) {

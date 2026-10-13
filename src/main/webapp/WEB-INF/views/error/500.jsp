@@ -16,8 +16,8 @@
 <main class="page narrow">
 <div class="card"><div class="errbox">
     <div class="code">500</div>
-    <h1>No se pudo completar la operación</h1>
-    <p>Verifique que MySQL esté iniciado y que <code>db.properties</code> tenga los datos correctos.</p>
+    <h1>Algo salió mal</h1>
+    <p>No pudimos completar lo que pediste. Intenta de nuevo y, si sigue pasando, avisa al administrador.</p>
     <c:if test="${not empty requestScope['jakarta.servlet.error.message']}">
         <p><c:out value="${requestScope['jakarta.servlet.error.message']}"/></p>
     </c:if>
