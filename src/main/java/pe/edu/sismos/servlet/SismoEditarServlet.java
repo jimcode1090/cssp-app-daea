@@ -17,7 +17,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-// US-21: Editar los datos de un sismo.
 @WebServlet(name = "SismoEditarServlet", urlPatterns = "/sismos/editar")
 public class SismoEditarServlet extends HttpServlet {
 
@@ -38,7 +37,6 @@ public class SismoEditarServlet extends HttpServlet {
             return;
         }
 
-        // US-21 (CA1): el formulario se carga con los datos actuales y el código en solo lectura.
         Sismo sismo = encontrado.get();
         request.setAttribute("modoEdicion", true);
         SismoNuevoServlet.conservarFormulario(request, sismo.getCodigo(), sismo.getFechaHora().toString(),
@@ -56,7 +54,6 @@ public class SismoEditarServlet extends HttpServlet {
 
         request.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        // El código llega oculto desde el formulario y no se vuelve a pedir: no se modifica al editar.
         String codigo = limpiar(request.getParameter("codigo"));
         String fechaHoraTexto = limpiar(request.getParameter("fechaHora"));
         String magnitudTexto = limpiar(request.getParameter("magnitud"));
@@ -84,12 +81,10 @@ public class SismoEditarServlet extends HttpServlet {
             Distrito distrito = SismoNuevoServlet.resolverDistrito(departamentoId, provinciaId, distritoId);
             Estacion estacion = estacionRepository.buscarPorId(estacionId).orElse(null);
 
-            // US-02 y US-41: las mismas validaciones del registro (también al editar).
             Sismo sismo = SismoNuevoServlet.construir(existente.getId(), codigo, fechaHoraTexto, magnitudTexto,
                     profundidadTexto, latitudTexto, longitudTexto, referencia, estado, distrito, estacion);
             sismoRepository.guardar(sismo);
 
-            // Redirect inicia una nueva petición GET y evita repetir el POST al recargar.
             response.sendRedirect(request.getContextPath()
                     + "/sismos/detalle?codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8)
                     + "&editado=1");

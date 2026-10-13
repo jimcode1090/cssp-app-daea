@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-// US-08: Editar un departamento.
 @WebServlet(name = "DepartamentoEditarServlet", urlPatterns = "/ubicaciones/departamentos/editar")
 public class DepartamentoEditarServlet extends HttpServlet {
     private final DepartamentoRepository departamentoRepository = new DepartamentoRepository();

@@ -14,7 +14,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// US-27: Agregar un distrito.
 @WebServlet(name = "DistritoNuevoServlet", urlPatterns = "/ubicaciones/distritos/nuevo")
 public class DistritoNuevoServlet extends HttpServlet {
     private final DistritoRepository distritoRepository = new DistritoRepository();

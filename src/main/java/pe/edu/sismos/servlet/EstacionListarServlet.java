@@ -9,7 +9,6 @@ import pe.edu.sismos.repository.EstacionRepository;
 
 import java.io.IOException;
 
-// US-18: Consultar el listado de estaciones.
 @WebServlet(name = "EstacionListarServlet", urlPatterns = "/estaciones")
 public class EstacionListarServlet extends HttpServlet {
     private final EstacionRepository estacionRepository = new EstacionRepository();

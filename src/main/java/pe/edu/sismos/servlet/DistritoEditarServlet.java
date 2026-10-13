@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-// US-10: Editar un distrito.
 @WebServlet(name = "DistritoEditarServlet", urlPatterns = "/ubicaciones/distritos/editar")
 public class DistritoEditarServlet extends HttpServlet {
     private final DistritoRepository distritoRepository = new DistritoRepository();

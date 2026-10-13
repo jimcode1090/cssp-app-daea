@@ -22,13 +22,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Set;
 
-// US-01: Registrar un nuevo sismo.
 @WebServlet(name = "SismoNuevoServlet", urlPatterns = "/sismos/nuevo")
 public class SismoNuevoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // Usado también por SismoEditarServlet (US-41): valores de estado permitidos.
     static final Set<String> ESTADOS_VALIDOS =
             Set.of("REGISTRADO", "EN_EVALUACION", "EN_SEGUIMIENTO", "CERRADO");
 
@@ -67,11 +65,9 @@ public class SismoNuevoServlet extends HttpServlet {
             Distrito distrito = resolverDistrito(departamentoId, provinciaId, distritoId);
             Estacion estacion = estacionRepository.buscarPorId(estacionId).orElse(null);
 
-            // US-02 y US-41: se validan todos los campos antes de guardar.
             Sismo sismo = construir(null, codigo, fechaHoraTexto, magnitudTexto, profundidadTexto,
                     latitudTexto, longitudTexto, referencia, estado, distrito, estacion);
 
-            // US-31: el código no puede repetirse.
             if (sismoRepository.existeCodigo(codigo)) {
                 request.setAttribute("error", "Ya existe un sismo con el código " + codigo);
                 mostrarFormulario(request, response);
@@ -80,7 +76,6 @@ public class SismoNuevoServlet extends HttpServlet {
 
             sismoRepository.guardar(sismo);
 
-            // Redirect inicia una nueva petición GET y evita repetir el POST al recargar.
             response.sendRedirect(request.getContextPath()
                     + "/sismos/detalle?codigo=" + URLEncoder.encode(codigo, StandardCharsets.UTF_8)
                     + "&creado=1");
@@ -93,24 +88,20 @@ public class SismoNuevoServlet extends HttpServlet {
         }
     }
 
-    // Usado también por SismoEditarServlet: valida los campos y arma el sismo, o lanza el mensaje de error.
     static Sismo construir(Long id, String codigo, String fechaHoraTexto, String magnitudTexto,
                            String profundidadTexto, String latitudTexto, String longitudTexto,
                            String referencia, String estado, Distrito distrito, Estacion estacion) {
 
-        // US-02: ningún campo puede quedar vacío.
         if (codigo.isBlank() || fechaHoraTexto.isBlank() || magnitudTexto.isBlank()
                 || profundidadTexto.isBlank() || latitudTexto.isBlank() || longitudTexto.isBlank()
                 || referencia.isBlank() || estado.isBlank()) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
         }
 
-        // US-28: la ubicación debe estar completa y ser coherente (departamento, provincia y distrito activos).
         if (distrito == null) {
             throw new IllegalArgumentException("Seleccione una ubicación válida");
         }
 
-        // US-17: la estación debe elegirse y estar activa.
         if (estacion == null) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
         }
@@ -118,7 +109,6 @@ public class SismoNuevoServlet extends HttpServlet {
             throw new IllegalArgumentException("La estación seleccionada está inactiva");
         }
 
-        // US-41: magnitud, profundidad y estado dentro de los valores permitidos.
         double magnitud;
         try {
             magnitud = Double.parseDouble(magnitudTexto);
@@ -152,7 +142,6 @@ public class SismoNuevoServlet extends HttpServlet {
             throw new IllegalArgumentException("Uno o más campos numéricos o de fecha tienen un formato incorrecto.");
         }
 
-        // US-03 y US-04: coordenadas dentro de rango y fecha que no sea futura.
         if (latitud < -90 || latitud > 90) {
             throw new IllegalArgumentException("La latitud debe estar entre -90 y 90");
         }
@@ -167,7 +156,6 @@ public class SismoNuevoServlet extends HttpServlet {
                 estado, "ACTIVO", distrito, estacion);
     }
 
-    // Usado también por SismoEditarServlet: el distrito solo es válido si pertenece a la provincia y al departamento elegidos.
     static Distrito resolverDistrito(long departamentoId, long provinciaId, long distritoId) {
         return new DistritoRepository().buscarPorId(distritoId)
                 .filter(d -> "ACTIVO".equals(d.getEstado())
@@ -178,7 +166,6 @@ public class SismoNuevoServlet extends HttpServlet {
                 .orElse(null);
     }
 
-    // Usado también por SismoEditarServlet: carga las listas de ubicación y las estaciones activas.
     static void cargarListas(HttpServletRequest request, long departamentoId, long provinciaId) {
         request.setAttribute("departamentos", new DepartamentoRepository().listarActivos());
         request.setAttribute("provincias", new ProvinciaRepository().listarActivasPorDepartamento(departamentoId));

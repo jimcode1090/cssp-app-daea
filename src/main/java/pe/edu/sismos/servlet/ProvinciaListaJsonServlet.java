@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-// US-28: provincias activas de un departamento, en formato JSON, para la lista dependiente.
 @WebServlet(name = "ProvinciaListaJsonServlet", urlPatterns = "/ubicaciones/provincias/lista")
 public class ProvinciaListaJsonServlet extends HttpServlet {
     private final ProvinciaRepository provinciaRepository = new ProvinciaRepository();

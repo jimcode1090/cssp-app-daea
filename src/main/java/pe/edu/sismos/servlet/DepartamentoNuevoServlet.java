@@ -12,7 +12,6 @@ import pe.edu.sismos.repository.PersistenciaException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// US-19: Agregar un departamento.
 @WebServlet(name = "DepartamentoNuevoServlet", urlPatterns = "/ubicaciones/departamentos/nuevo")
 public class DepartamentoNuevoServlet extends HttpServlet {
     private final DepartamentoRepository departamentoRepository = new DepartamentoRepository();

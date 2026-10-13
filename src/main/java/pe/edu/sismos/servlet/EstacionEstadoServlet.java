@@ -10,7 +10,6 @@ import pe.edu.sismos.repository.EstacionRepository;
 
 import java.io.IOException;
 
-// US-04: Activar o desactivar una estación.
 @WebServlet(name = "EstacionEstadoServlet", urlPatterns = "/estaciones/estado")
 public class EstacionEstadoServlet extends HttpServlet {
     private final EstacionRepository estacionRepository = new EstacionRepository();

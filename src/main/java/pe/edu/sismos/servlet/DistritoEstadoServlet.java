@@ -11,7 +11,6 @@ import pe.edu.sismos.repository.SismoRepository;
 
 import java.io.IOException;
 
-// US-27: Desactivar o activar un distrito.
 @WebServlet(name = "DistritoEstadoServlet", urlPatterns = "/ubicaciones/distritos/estado")
 public class DistritoEstadoServlet extends HttpServlet {
     private final DistritoRepository distritoRepository = new DistritoRepository();

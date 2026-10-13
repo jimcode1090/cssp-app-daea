@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-// US-09: Editar una provincia.
 @WebServlet(name = "ProvinciaEditarServlet", urlPatterns = "/ubicaciones/provincias/editar")
 public class ProvinciaEditarServlet extends HttpServlet {
     private final ProvinciaRepository provinciaRepository = new ProvinciaRepository();

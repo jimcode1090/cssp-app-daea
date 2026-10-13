@@ -11,7 +11,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 
-// US-19: Desactivar o activar un departamento.
 @WebServlet(name = "DepartamentoEstadoServlet", urlPatterns = "/ubicaciones/departamentos/estado")
 public class DepartamentoEstadoServlet extends HttpServlet {
     private final DepartamentoRepository departamentoRepository = new DepartamentoRepository();

@@ -14,7 +14,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// US-29: Editar los datos de una estación.
 @WebServlet(name = "EstacionEditarServlet", urlPatterns = "/estaciones/editar")
 public class EstacionEditarServlet extends HttpServlet {
     private final EstacionRepository estacionRepository = new EstacionRepository();

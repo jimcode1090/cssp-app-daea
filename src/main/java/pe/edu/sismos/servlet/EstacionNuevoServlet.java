@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Set;
 
-// US-03: Registrar una estación de monitoreo.
 @WebServlet(name = "EstacionNuevoServlet", urlPatterns = "/estaciones/nuevo")
 public class EstacionNuevoServlet extends HttpServlet {
     static final Set<String> ESTADOS_VALIDOS = Set.of("ACTIVO", "INACTIVO");
