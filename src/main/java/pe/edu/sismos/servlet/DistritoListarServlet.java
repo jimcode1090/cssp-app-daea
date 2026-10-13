@@ -10,7 +10,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 
-// US-27: Gestionar distritos (listado y formulario Agregar).
 @WebServlet(name = "DistritoListarServlet", urlPatterns = "/ubicaciones/distritos")
 public class DistritoListarServlet extends HttpServlet {
     @Override

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-// US-28: distritos activos de una provincia, en formato JSON, para la lista dependiente.
 @WebServlet(name = "DistritoListaJsonServlet", urlPatterns = "/ubicaciones/distritos/lista")
 public class DistritoListaJsonServlet extends HttpServlet {
     private final DistritoRepository distritoRepository = new DistritoRepository();

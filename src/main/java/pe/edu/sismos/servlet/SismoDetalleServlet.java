@@ -11,7 +11,6 @@ import pe.edu.sismos.repository.SismoRepository;
 import java.io.IOException;
 import java.util.Optional;
 
-// US-12: Ver el detalle completo de un sismo.
 @WebServlet(name = "SismoDetalleServlet", urlPatterns = "/sismos/detalle")
 public class SismoDetalleServlet extends HttpServlet {
 
@@ -26,7 +25,6 @@ public class SismoDetalleServlet extends HttpServlet {
         String codigo = request.getParameter("codigo");
         Optional<Sismo> encontrado = sismoRepository.buscarPorCodigo(codigo);
 
-        // US-25: si el código no existe, se responde con 404.
         if (encontrado.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             request.setAttribute("mensajeError", "No existe un sismo con el código solicitado.");

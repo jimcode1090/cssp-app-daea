@@ -13,7 +13,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-// US-22: Eliminar un sismo con confirmación previa.
 @WebServlet(name = "SismoEliminarServlet", urlPatterns = "/sismos/eliminar")
 public class SismoEliminarServlet extends HttpServlet {
 
@@ -33,7 +32,6 @@ public class SismoEliminarServlet extends HttpServlet {
             return;
         }
 
-        // US-22 (CA1, CA2): pantalla de confirmación con los datos del sismo y la advertencia.
         request.setAttribute("sismo", encontrado.get());
         request.getRequestDispatcher("/WEB-INF/views/sismos/confirmar-eliminar.jsp")
                 .forward(request, response);
@@ -45,7 +43,6 @@ public class SismoEliminarServlet extends HttpServlet {
 
         String codigo = request.getParameter("codigo");
 
-        // US-22 (CA3): se da de baja (el registro queda inactivo) y se redirige al listado con un mensaje.
         if (codigo == null || !sismoRepository.eliminar(codigo)) {
             noEncontrado(request, response);
             return;

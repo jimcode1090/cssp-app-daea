@@ -13,17 +13,10 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Representa un sismo con sus atributos (sección 5.4 de los requisitos técnicos).
- */
 @Entity
 @Table(name = "sismo")
 public class Sismo {
 
-    // Adicional a la sección 5.4: el profesor no trabajó fechas en su ejemplo (Producto no
-    // tenía), así que no hay un patrón de clase visto para mostrarlas. Se resuelve con un
-    // método de la propia clase (getFechaHoraTexto), sin sacar la lógica de formato a la JSP
-    // ni usar scriptlets, que es la regla que sí dio el profesor.
     private static final DateTimeFormatter FORMATO_FECHA_VISIBLE =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 

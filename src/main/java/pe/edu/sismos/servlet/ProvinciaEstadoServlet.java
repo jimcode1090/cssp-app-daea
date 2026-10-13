@@ -12,7 +12,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 
-// US-49: Desactivar o activar una provincia.
 @WebServlet(name = "ProvinciaEstadoServlet", urlPatterns = "/ubicaciones/provincias/estado")
 public class ProvinciaEstadoServlet extends HttpServlet {
     private final ProvinciaRepository provinciaRepository = new ProvinciaRepository();

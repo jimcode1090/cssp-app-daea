@@ -10,7 +10,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 
-// US-19: Gestionar departamentos (listado y formulario Agregar).
 @WebServlet(name = "DepartamentoListarServlet", urlPatterns = "/ubicaciones/departamentos")
 public class DepartamentoListarServlet extends HttpServlet {
     @Override

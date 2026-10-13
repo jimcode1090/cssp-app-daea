@@ -14,7 +14,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// US-26: Agregar una provincia.
 @WebServlet(name = "ProvinciaNuevoServlet", urlPatterns = "/ubicaciones/provincias/nuevo")
 public class ProvinciaNuevoServlet extends HttpServlet {
     private final ProvinciaRepository provinciaRepository = new ProvinciaRepository();

@@ -11,7 +11,6 @@ import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
 
-// US-26: Gestionar provincias (listado y formulario Agregar).
 @WebServlet(name = "ProvinciaListarServlet", urlPatterns = "/ubicaciones/provincias")
 public class ProvinciaListarServlet extends HttpServlet {
     @Override

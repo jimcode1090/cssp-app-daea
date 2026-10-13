@@ -11,7 +11,6 @@ import pe.edu.sismos.repository.SismoRepository;
 
 import java.io.IOException;
 
-// US-18: Ver los datos de una estación.
 @WebServlet(name = "EstacionDetalleServlet", urlPatterns = "/estaciones/detalle")
 public class EstacionDetalleServlet extends HttpServlet {
     private final EstacionRepository estacionRepository = new EstacionRepository();
