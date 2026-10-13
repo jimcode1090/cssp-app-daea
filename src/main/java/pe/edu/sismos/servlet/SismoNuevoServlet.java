@@ -8,9 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.sismos.model.Distrito;
 import pe.edu.sismos.model.Estacion;
 import pe.edu.sismos.model.Sismo;
+import pe.edu.sismos.repository.DepartamentoRepository;
 import pe.edu.sismos.repository.DistritoRepository;
 import pe.edu.sismos.repository.EstacionRepository;
 import pe.edu.sismos.repository.PersistenciaException;
+import pe.edu.sismos.repository.ProvinciaRepository;
 import pe.edu.sismos.repository.SismoRepository;
 
 import java.io.IOException;
@@ -31,7 +33,6 @@ public class SismoNuevoServlet extends HttpServlet {
             Set.of("REGISTRADO", "EN_EVALUACION", "EN_SEGUIMIENTO", "CERRADO");
 
     private final SismoRepository sismoRepository = new SismoRepository();
-    private final DistritoRepository distritoRepository = new DistritoRepository();
     private final EstacionRepository estacionRepository = new EstacionRepository();
 
     @Override
@@ -52,21 +53,19 @@ public class SismoNuevoServlet extends HttpServlet {
         String profundidadTexto = limpiar(request.getParameter("profundidad"));
         String latitudTexto = limpiar(request.getParameter("latitud"));
         String longitudTexto = limpiar(request.getParameter("longitud"));
+        long departamentoId = DepartamentoEditarServlet.leerId(request.getParameter("departamentoId"));
+        long provinciaId = DepartamentoEditarServlet.leerId(request.getParameter("provinciaId"));
         long distritoId = DepartamentoEditarServlet.leerId(request.getParameter("distritoId"));
         long estacionId = DepartamentoEditarServlet.leerId(request.getParameter("estacionId"));
         String referencia = limpiar(request.getParameter("referencia"));
         String estado = limpiar(request.getParameter("estado"));
 
         conservarFormulario(request, codigo, fechaHoraTexto, magnitudTexto, profundidadTexto,
-                latitudTexto, longitudTexto, distritoId, estacionId, referencia, estado);
+                latitudTexto, longitudTexto, departamentoId, provinciaId, distritoId, estacionId, referencia, estado);
 
         try {
-            Distrito distrito = distritoRepository.buscarPorId(distritoId)
-                    .filter(d -> "ACTIVO".equals(d.getEstado()))
-                    .orElse(null);
-            Estacion estacion = estacionRepository.buscarPorId(estacionId)
-                    .filter(e -> "ACTIVO".equals(e.getEstado()))
-                    .orElse(null);
+            Distrito distrito = resolverDistrito(departamentoId, provinciaId, distritoId);
+            Estacion estacion = estacionRepository.buscarPorId(estacionId).orElse(null);
 
             // US-02 y US-41: se validan todos los campos antes de guardar.
             Sismo sismo = construir(null, codigo, fechaHoraTexto, magnitudTexto, profundidadTexto,
@@ -102,8 +101,21 @@ public class SismoNuevoServlet extends HttpServlet {
         // US-02: ningún campo puede quedar vacío.
         if (codigo.isBlank() || fechaHoraTexto.isBlank() || magnitudTexto.isBlank()
                 || profundidadTexto.isBlank() || latitudTexto.isBlank() || longitudTexto.isBlank()
-                || referencia.isBlank() || estado.isBlank() || distrito == null || estacion == null) {
+                || referencia.isBlank() || estado.isBlank()) {
             throw new IllegalArgumentException("Todos los campos son obligatorios.");
+        }
+
+        // US-28: la ubicación debe estar completa y ser coherente (departamento, provincia y distrito activos).
+        if (distrito == null) {
+            throw new IllegalArgumentException("Seleccione una ubicación válida");
+        }
+
+        // US-17: la estación debe elegirse y estar activa.
+        if (estacion == null) {
+            throw new IllegalArgumentException("Todos los campos son obligatorios.");
+        }
+        if (!"ACTIVO".equals(estacion.getEstado())) {
+            throw new IllegalArgumentException("La estación seleccionada está inactiva");
         }
 
         // US-41: magnitud, profundidad y estado dentro de los valores permitidos.
@@ -155,21 +167,37 @@ public class SismoNuevoServlet extends HttpServlet {
                 estado, "ACTIVO", distrito, estacion);
     }
 
-    // Usado también por SismoEditarServlet: carga las listas de distritos y estaciones activas.
-    static void cargarListas(HttpServletRequest request) {
-        request.setAttribute("distritos", new DistritoRepository().listarActivos());
+    // Usado también por SismoEditarServlet: el distrito solo es válido si pertenece a la provincia y al departamento elegidos.
+    static Distrito resolverDistrito(long departamentoId, long provinciaId, long distritoId) {
+        return new DistritoRepository().buscarPorId(distritoId)
+                .filter(d -> "ACTIVO".equals(d.getEstado())
+                        && d.getProvincia().getId() == provinciaId
+                        && "ACTIVO".equals(d.getProvincia().getEstado())
+                        && d.getProvincia().getDepartamento().getId() == departamentoId
+                        && "ACTIVO".equals(d.getProvincia().getDepartamento().getEstado()))
+                .orElse(null);
+    }
+
+    // Usado también por SismoEditarServlet: carga las listas de ubicación y las estaciones activas.
+    static void cargarListas(HttpServletRequest request, long departamentoId, long provinciaId) {
+        request.setAttribute("departamentos", new DepartamentoRepository().listarActivos());
+        request.setAttribute("provincias", new ProvinciaRepository().listarActivasPorDepartamento(departamentoId));
+        request.setAttribute("distritos", new DistritoRepository().listarActivosPorProvincia(provinciaId));
         request.setAttribute("estaciones", new EstacionRepository().listarActivas());
     }
 
     static void conservarFormulario(HttpServletRequest request, String codigo, String fechaHora,
                                     String magnitud, String profundidad, String latitud, String longitud,
-                                    long distritoId, long estacionId, String referencia, String estado) {
+                                    long departamentoId, long provinciaId, long distritoId, long estacionId,
+                                    String referencia, String estado) {
         request.setAttribute("codigoIngresado", codigo);
         request.setAttribute("fechaHoraIngresada", fechaHora);
         request.setAttribute("magnitudIngresada", magnitud);
         request.setAttribute("profundidadIngresada", profundidad);
         request.setAttribute("latitudIngresada", latitud);
         request.setAttribute("longitudIngresada", longitud);
+        request.setAttribute("departamentoIdIngresado", departamentoId);
+        request.setAttribute("provinciaIdIngresada", provinciaId);
         request.setAttribute("distritoIdIngresado", distritoId);
         request.setAttribute("estacionIdIngresada", estacionId);
         request.setAttribute("referenciaIngresada", referencia);
@@ -178,7 +206,11 @@ public class SismoNuevoServlet extends HttpServlet {
 
     private void mostrarFormulario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        cargarListas(request);
+        long departamentoId = request.getAttribute("departamentoIdIngresado") == null
+                ? -1 : (long) request.getAttribute("departamentoIdIngresado");
+        long provinciaId = request.getAttribute("provinciaIdIngresada") == null
+                ? -1 : (long) request.getAttribute("provinciaIdIngresada");
+        cargarListas(request, departamentoId, provinciaId);
         request.getRequestDispatcher("/WEB-INF/views/sismos/formulario.jsp")
                 .forward(request, response);
     }
