@@ -14,7 +14,9 @@ import java.io.IOException;
 @WebServlet(name = "DepartamentoEstadoServlet", urlPatterns = "/ubicaciones/departamentos/estado")
 public class DepartamentoEstadoServlet extends HttpServlet {
     private final DepartamentoRepository departamentoRepository = new DepartamentoRepository();
-    @Override protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Departamento departamento = departamentoRepository.buscarPorId(DepartamentoEditarServlet.leerId(request.getParameter("id"))).orElse(null);
         if (departamento != null) {
             departamento.setEstado("ACTIVO".equals(departamento.getEstado()) ? "INACTIVO" : "ACTIVO");

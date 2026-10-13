@@ -13,7 +13,9 @@ import java.io.IOException;
 @WebServlet(name = "DepartamentoListarServlet", urlPatterns = "/ubicaciones/departamentos")
 public class DepartamentoListarServlet extends HttpServlet {
     private final DepartamentoRepository departamentoRepository = new DepartamentoRepository();
-    @Override protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("departamentos", departamentoRepository.listar());
         request.getRequestDispatcher("/WEB-INF/views/ubicaciones/departamentos.jsp").forward(request, response);
     }
