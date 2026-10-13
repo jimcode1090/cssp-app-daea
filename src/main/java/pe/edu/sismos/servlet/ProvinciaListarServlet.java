@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.sismos.repository.DepartamentoRepository;
+import pe.edu.sismos.repository.DistritoRepository;
 import pe.edu.sismos.repository.ProvinciaRepository;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class ProvinciaListarServlet extends HttpServlet {
     static void mostrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("provincias", new ProvinciaRepository().listar());
         request.setAttribute("departamentos", new DepartamentoRepository().listarActivos());
+        request.setAttribute("distritosPorProvincia", new DistritoRepository().contarActivosPorProvincia());
         request.getRequestDispatcher("/WEB-INF/views/ubicaciones/provincias.jsp").forward(request, response);
     }
 }
