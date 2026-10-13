@@ -67,7 +67,7 @@
                 </c:choose>
 
                 <div class="field"><label>Nombre<span class="req">*</span></label>
-                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>"></div>
+                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>" placeholder="Ej. Estación Arequipa Centro"></div>
 
                 <div class="field"><label>Provincia<span class="req">*</span></label>
                     <select name="provinciaId">
@@ -79,10 +79,10 @@
                     </select></div>
 
                 <div class="field"><label>Latitud<span class="req">*</span></label>
-                    <input type="number" step="any" name="latitud" value="<c:out value='${latitudIngresada}'/>"></div>
+                    <input type="number" step="any" name="latitud" value="<c:out value='${latitudIngresada}'/>" placeholder="Ej. -16.3988"></div>
 
                 <div class="field"><label>Longitud<span class="req">*</span></label>
-                    <input type="number" step="any" name="longitud" value="<c:out value='${longitudIngresada}'/>">
+                    <input type="number" step="any" name="longitud" value="<c:out value='${longitudIngresada}'/>" placeholder="Ej. -71.5369">
                 </div>
 
                 <div class="field"><label>Fecha de instalación<span class="req">*</span></label>

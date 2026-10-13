@@ -43,7 +43,7 @@
         <div class="card-h">Nuevo distrito</div>
         <div class="card-b">
             <form method="post" action="${pageContext.request.contextPath}/ubicaciones/distritos/nuevo"
-                  class="form-grid">
+                  class="form-inline">
                 <div class="field"><label>Provincia<span class="req">*</span></label>
                     <select name="provinciaId">
                         <option value="">Seleccione una provincia</option>
@@ -53,7 +53,7 @@
                         </c:forEach>
                     </select></div>
                 <div class="field"><label>Nombre<span class="req">*</span></label>
-                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>"></div>
+                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>" placeholder="Ej. Miraflores"></div>
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Agregar</button>
                 </div>

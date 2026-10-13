@@ -47,7 +47,7 @@
                         </c:forEach>
                     </select></div>
                 <div class="field"><label>Nombre<span class="req">*</span></label>
-                    <input type="text" name="nombre" value="<c:out value='${distrito.nombre}'/>"></div>
+                    <input type="text" name="nombre" value="<c:out value='${distrito.nombre}'/>" placeholder="Ej. Miraflores"></div>
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Guardar</button>
                     <a class="btn" href="${pageContext.request.contextPath}/ubicaciones/distritos">Cancelar</a>

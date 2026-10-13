@@ -43,9 +43,9 @@
         <div class="card-h">Nuevo departamento</div>
         <div class="card-b">
             <form method="post" action="${pageContext.request.contextPath}/ubicaciones/departamentos/nuevo"
-                  class="form-grid">
+                  class="form-inline">
                 <div class="field"><label>Nombre<span class="req">*</span></label>
-                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>"></div>
+                    <input type="text" name="nombre" value="<c:out value='${nombreIngresado}'/>" placeholder="Ej. Arequipa"></div>
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Agregar</button>
                 </div>
